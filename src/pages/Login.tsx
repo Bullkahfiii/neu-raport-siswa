@@ -88,7 +88,7 @@ export default function Login() {
 
       {/* Footer */}
       <footer className="py-4 text-center text-sm text-muted-foreground">
-        <p>© 2024 Neutron Bandung-2. All rights reserved.</p>
+        <p>© 2026 Neutron Bandung-2. All rights reserved.</p>
       </footer>
     </div>;
 }
