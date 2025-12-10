@@ -1,33 +1,95 @@
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Student } from '@/types/student';
-import { getStudentScores, getStudentAttendance } from '@/data/mockData';
+import { Student, TestScore, Attendance } from '@/types/student';
+import { getAllStudentData, isAppsScriptConfigured } from '@/services/googleSheetsApi';
+import { getStudentScores as getMockScores, getStudentAttendance as getMockAttendance } from '@/data/mockData';
 import { StudentIdentityCard } from '@/components/StudentIdentityCard';
 import { AttendanceSummary } from '@/components/AttendanceSummary';
 import { ScoreTable } from '@/components/ScoreTable';
 import { ProgressChart } from '@/components/ProgressChart';
 import { Button } from '@/components/ui/button';
-import { GraduationCap, LogOut, Download, FileText } from 'lucide-react';
+import { GraduationCap, LogOut, Download, FileText, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
 import html2pdf from 'html2pdf.js';
 
+interface Scores {
+  tka: TestScore[];
+  tesEvaluasi: TestScore[];
+  utbk: TestScore[];
+}
+
 export default function Dashboard() {
   const [student, setStudent] = useState<Student | null>(null);
+  const [scores, setScores] = useState<Scores>({ tka: [], tesEvaluasi: [], utbk: [] });
+  const [attendance, setAttendance] = useState<Attendance[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   const navigate = useNavigate();
   const reportRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  const loadData = async () => {
     const storedStudent = localStorage.getItem('loggedInStudent');
+    const storedPhone = localStorage.getItem('loggedInPhone');
+    
     if (!storedStudent) {
       navigate('/');
       return;
     }
-    setStudent(JSON.parse(storedStudent));
+
+    const parsedStudent = JSON.parse(storedStudent) as Student;
+    setStudent(parsedStudent);
+
+    if (isAppsScriptConfigured() && storedPhone) {
+      // Load from Google Sheets API
+      try {
+        const result = await getAllStudentData(storedPhone);
+        
+        if (result.success && result.data) {
+          setStudent(result.data.student);
+          setScores(result.data.scores);
+          setAttendance(result.data.attendance);
+          localStorage.setItem('loggedInStudent', JSON.stringify(result.data.student));
+        } else {
+          toast.error('Gagal memuat data dari Google Sheets');
+          // Fallback to mock data
+          const mockScores = getMockScores(parsedStudent.nama);
+          const mockAttendance = getMockAttendance(parsedStudent.nama);
+          setScores(mockScores);
+          setAttendance(mockAttendance);
+        }
+      } catch (error) {
+        toast.error('Terjadi kesalahan saat memuat data');
+        // Fallback to mock data
+        const mockScores = getMockScores(parsedStudent.nama);
+        const mockAttendance = getMockAttendance(parsedStudent.nama);
+        setScores(mockScores);
+        setAttendance(mockAttendance);
+      }
+    } else {
+      // Use mock data
+      const mockScores = getMockScores(parsedStudent.nama);
+      const mockAttendance = getMockAttendance(parsedStudent.nama);
+      setScores(mockScores);
+      setAttendance(mockAttendance);
+    }
+
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    loadData();
   }, [navigate]);
+
+  const handleRefresh = async () => {
+    setIsLoading(true);
+    toast.info('Memperbarui data...');
+    await loadData();
+    toast.success('Data berhasil diperbarui');
+  };
 
   const handleLogout = () => {
     localStorage.removeItem('loggedInStudent');
+    localStorage.removeItem('loggedInPhone');
     toast.success('Berhasil keluar');
     navigate('/');
   };
@@ -65,16 +127,16 @@ export default function Dashboard() {
     }
   };
 
-  if (!student) {
+  if (isLoading || !student) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full" />
+        <div className="text-center">
+          <div className="animate-spin h-10 w-10 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4" />
+          <p className="text-muted-foreground">Memuat data...</p>
+        </div>
       </div>
     );
   }
-
-  const scores = getStudentScores(student.nama);
-  const attendance = getStudentAttendance(student.nama);
 
   return (
     <div className="min-h-screen bg-background">
@@ -92,6 +154,14 @@ export default function Dashboard() {
           </div>
 
           <div className="flex items-center gap-2">
+            <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={handleRefresh}
+              title="Refresh data"
+            >
+              <RefreshCw className="w-4 h-4" />
+            </Button>
             <Button 
               variant="outline" 
               size="sm"
