@@ -6,9 +6,10 @@ interface ProgressChartProps {
   tkaScores: TestScore[];
   tesEvaluasiScores: TestScore[];
   utbkScores: TestScore[];
+  compact?: boolean;
 }
 
-export function ProgressChart({ tkaScores, tesEvaluasiScores, utbkScores }: ProgressChartProps) {
+export function ProgressChart({ tkaScores, tesEvaluasiScores, utbkScores, compact = false }: ProgressChartProps) {
   const calculateAverage = (scores: TestScore[]) => {
     return scores.map(score => {
       const values = Object.values(score.nilai);
@@ -38,37 +39,39 @@ export function ProgressChart({ tkaScores, tesEvaluasiScores, utbkScores }: Prog
     .sort((a, b) => new Date(a.tanggal).getTime() - new Date(b.tanggal).getTime());
 
   return (
-    <div className="bg-card rounded-xl shadow-card p-6 animate-slide-up" style={{ animationDelay: '0.3s' }}>
-      <div className="flex items-center gap-3 mb-6">
-        <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
-          <TrendingUp className="w-5 h-5 text-accent" />
+    <div className={`bg-card rounded-xl shadow-card ${compact ? 'p-4' : 'p-6'} animate-slide-up`} style={{ animationDelay: '0.3s' }}>
+      <div className={`flex items-center gap-3 ${compact ? 'mb-3' : 'mb-6'}`}>
+        <div className={`${compact ? 'w-8 h-8' : 'w-10 h-10'} rounded-lg bg-accent/10 flex items-center justify-center`}>
+          <TrendingUp className={`${compact ? 'w-4 h-4' : 'w-5 h-5'} text-accent`} />
         </div>
-        <h3 className="text-xl font-bold text-foreground">Grafik Perkembangan Nilai</h3>
+        <h3 className={`${compact ? 'text-base' : 'text-xl'} font-bold text-foreground`}>Grafik Perkembangan Nilai</h3>
       </div>
 
-      <div className="h-80">
+      <div className={compact ? 'h-48' : 'h-80'}>
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+          <LineChart margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
             <XAxis 
               dataKey="tanggal" 
               stroke="hsl(var(--muted-foreground))"
-              fontSize={12}
+              fontSize={compact ? 10 : 12}
             />
             <YAxis 
               stroke="hsl(var(--muted-foreground))"
-              fontSize={12}
+              fontSize={compact ? 10 : 12}
+              width={30}
             />
             <Tooltip
               contentStyle={{
                 backgroundColor: 'hsl(var(--card))',
                 border: '1px solid hsl(var(--border))',
                 borderRadius: '8px',
-                boxShadow: 'var(--shadow-md)'
+                boxShadow: 'var(--shadow-md)',
+                fontSize: compact ? '10px' : '12px'
               }}
               labelStyle={{ color: 'hsl(var(--foreground))' }}
             />
-            <Legend />
+            <Legend wrapperStyle={{ fontSize: compact ? '10px' : '12px' }} />
             
             {tkaData.length > 0 && (
               <Line
@@ -77,9 +80,9 @@ export function ProgressChart({ tkaScores, tesEvaluasiScores, utbkScores }: Prog
                 dataKey="rataRata"
                 name="TKA"
                 stroke="hsl(var(--primary))"
-                strokeWidth={3}
-                dot={{ fill: 'hsl(var(--primary))', strokeWidth: 2, r: 5 }}
-                activeDot={{ r: 8 }}
+                strokeWidth={compact ? 2 : 3}
+                dot={{ fill: 'hsl(var(--primary))', strokeWidth: 2, r: compact ? 3 : 5 }}
+                activeDot={{ r: compact ? 5 : 8 }}
               />
             )}
             
@@ -90,9 +93,9 @@ export function ProgressChart({ tkaScores, tesEvaluasiScores, utbkScores }: Prog
                 dataKey="rataRata"
                 name="Tes Evaluasi"
                 stroke="hsl(var(--success))"
-                strokeWidth={3}
-                dot={{ fill: 'hsl(var(--success))', strokeWidth: 2, r: 5 }}
-                activeDot={{ r: 8 }}
+                strokeWidth={compact ? 2 : 3}
+                dot={{ fill: 'hsl(var(--success))', strokeWidth: 2, r: compact ? 3 : 5 }}
+                activeDot={{ r: compact ? 5 : 8 }}
               />
             )}
             
@@ -103,32 +106,32 @@ export function ProgressChart({ tkaScores, tesEvaluasiScores, utbkScores }: Prog
                 dataKey="rataRata"
                 name="UTBK"
                 stroke="hsl(var(--accent))"
-                strokeWidth={3}
-                dot={{ fill: 'hsl(var(--accent))', strokeWidth: 2, r: 5 }}
-                activeDot={{ r: 8 }}
+                strokeWidth={compact ? 2 : 3}
+                dot={{ fill: 'hsl(var(--accent))', strokeWidth: 2, r: compact ? 3 : 5 }}
+                activeDot={{ r: compact ? 5 : 8 }}
               />
             )}
           </LineChart>
         </ResponsiveContainer>
       </div>
 
-      <div className="mt-4 flex flex-wrap gap-4 justify-center">
+      <div className={`${compact ? 'mt-2' : 'mt-4'} flex flex-wrap gap-4 justify-center`}>
         {tkaData.length > 0 && (
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-primary" />
-            <span className="text-sm text-muted-foreground">TKA</span>
+            <div className={`${compact ? 'w-2 h-2' : 'w-3 h-3'} rounded-full bg-primary`} />
+            <span className={`${compact ? 'text-xs' : 'text-sm'} text-muted-foreground`}>TKA</span>
           </div>
         )}
         {tesEvaluasiData.length > 0 && (
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-success" />
-            <span className="text-sm text-muted-foreground">Tes Evaluasi</span>
+            <div className={`${compact ? 'w-2 h-2' : 'w-3 h-3'} rounded-full bg-success`} />
+            <span className={`${compact ? 'text-xs' : 'text-sm'} text-muted-foreground`}>Tes Evaluasi</span>
           </div>
         )}
         {utbkData.length > 0 && (
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-accent" />
-            <span className="text-sm text-muted-foreground">UTBK</span>
+            <div className={`${compact ? 'w-2 h-2' : 'w-3 h-3'} rounded-full bg-accent`} />
+            <span className={`${compact ? 'text-xs' : 'text-sm'} text-muted-foreground`}>UTBK</span>
           </div>
         )}
       </div>

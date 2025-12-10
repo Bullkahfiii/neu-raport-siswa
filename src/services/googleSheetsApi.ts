@@ -1,7 +1,7 @@
 import { Student, TestScore, Attendance } from '@/types/student';
 
-// URL Google Apps Script Web App - Ganti dengan URL deployment Anda
-const APPS_SCRIPT_URL = localStorage.getItem('appsScriptUrl') || '';
+// URL Google Apps Script Web App - Hardcoded
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwlmtgrWGGk7t2BKa5esz__LpGJKykqCU_VDNTTWwsv1ut8_-Vn2WCrUxksaQjKZ2Iz8g/exec';
 
 export interface ApiResponse<T> {
   success: boolean;
@@ -19,34 +19,15 @@ export interface AllStudentData {
   attendance: Attendance[];
 }
 
-// Set URL Apps Script
-export const setAppsScriptUrl = (url: string) => {
-  localStorage.setItem('appsScriptUrl', url);
-};
-
-// Get URL Apps Script
-export const getAppsScriptUrl = (): string => {
-  return localStorage.getItem('appsScriptUrl') || '';
-};
-
-// Check if Apps Script is configured
+// Check if Apps Script is configured (always true now)
 export const isAppsScriptConfigured = (): boolean => {
-  const url = getAppsScriptUrl();
-  return url.length > 0 && url.includes('script.google.com');
+  return true;
 };
 
 // Login by phone number
 export const loginByPhone = async (phone: string): Promise<ApiResponse<Student>> => {
-  const url = getAppsScriptUrl();
-  
-  if (!url) {
-    return { success: false, error: 'URL Apps Script belum dikonfigurasi' };
-  }
-
   try {
-    // Gunakan mode no-cors tidak bisa karena tidak bisa baca response
-    // Google Apps Script perlu diakses dengan redirect mode
-    const response = await fetch(`${url}?action=login&phone=${encodeURIComponent(phone)}`, {
+    const response = await fetch(`${APPS_SCRIPT_URL}?action=login&phone=${encodeURIComponent(phone)}`, {
       method: 'GET',
       redirect: 'follow',
     });
@@ -54,20 +35,14 @@ export const loginByPhone = async (phone: string): Promise<ApiResponse<Student>>
     return result;
   } catch (error) {
     console.error('Login error:', error);
-    return { success: false, error: 'Gagal terhubung ke server. Pastikan URL Apps Script sudah di-deploy dengan benar dan akses diset ke "Anyone".' };
+    return { success: false, error: 'Gagal terhubung ke server. Silakan coba lagi.' };
   }
 };
 
 // Get all student data (combined endpoint)
 export const getAllStudentData = async (phone: string): Promise<ApiResponse<AllStudentData>> => {
-  const url = getAppsScriptUrl();
-  
-  if (!url) {
-    return { success: false, error: 'URL Apps Script belum dikonfigurasi' };
-  }
-
   try {
-    const response = await fetch(`${url}?action=getAllData&phone=${encodeURIComponent(phone)}`, {
+    const response = await fetch(`${APPS_SCRIPT_URL}?action=getAllData&phone=${encodeURIComponent(phone)}`, {
       method: 'GET',
       redirect: 'follow',
     });
@@ -75,7 +50,7 @@ export const getAllStudentData = async (phone: string): Promise<ApiResponse<AllS
     return result;
   } catch (error) {
     console.error('GetAllData error:', error);
-    return { success: false, error: 'Gagal terhubung ke server. Pastikan URL Apps Script sudah di-deploy dengan benar.' };
+    return { success: false, error: 'Gagal terhubung ke server. Silakan coba lagi.' };
   }
 };
 
@@ -85,14 +60,8 @@ export const getStudentScores = async (nama: string): Promise<ApiResponse<{
   tesEvaluasi: TestScore[];
   utbk: TestScore[];
 }>> => {
-  const url = getAppsScriptUrl();
-  
-  if (!url) {
-    return { success: false, error: 'URL Apps Script belum dikonfigurasi' };
-  }
-
   try {
-    const response = await fetch(`${url}?action=getScores&nama=${encodeURIComponent(nama)}`);
+    const response = await fetch(`${APPS_SCRIPT_URL}?action=getScores&nama=${encodeURIComponent(nama)}`);
     const result = await response.json();
     return result;
   } catch (error) {
@@ -102,14 +71,8 @@ export const getStudentScores = async (nama: string): Promise<ApiResponse<{
 
 // Get student attendance
 export const getStudentAttendance = async (nama: string): Promise<ApiResponse<Attendance[]>> => {
-  const url = getAppsScriptUrl();
-  
-  if (!url) {
-    return { success: false, error: 'URL Apps Script belum dikonfigurasi' };
-  }
-
   try {
-    const response = await fetch(`${url}?action=getAttendance&nama=${encodeURIComponent(nama)}`);
+    const response = await fetch(`${APPS_SCRIPT_URL}?action=getAttendance&nama=${encodeURIComponent(nama)}`);
     const result = await response.json();
     return result;
   } catch (error) {

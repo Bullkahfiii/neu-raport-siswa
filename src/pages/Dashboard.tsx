@@ -1,16 +1,16 @@
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Student, TestScore, Attendance } from '@/types/student';
-import { getAllStudentData, isAppsScriptConfigured } from '@/services/googleSheetsApi';
-import { getStudentScores as getMockScores, getStudentAttendance as getMockAttendance } from '@/data/mockData';
+import { getAllStudentData } from '@/services/googleSheetsApi';
 import { StudentIdentityCard } from '@/components/StudentIdentityCard';
 import { AttendanceSummary } from '@/components/AttendanceSummary';
 import { ScoreTable } from '@/components/ScoreTable';
 import { ProgressChart } from '@/components/ProgressChart';
 import { Button } from '@/components/ui/button';
-import { GraduationCap, LogOut, Download, FileText, RefreshCw } from 'lucide-react';
+import { LogOut, Download, FileText, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
 import html2pdf from 'html2pdf.js';
+import logo from '@/assets/logo.png';
 
 interface Scores {
   tka: TestScore[];
@@ -39,8 +39,7 @@ export default function Dashboard() {
     const parsedStudent = JSON.parse(storedStudent) as Student;
     setStudent(parsedStudent);
 
-    if (isAppsScriptConfigured() && storedPhone) {
-      // Load from Google Sheets API
+    if (storedPhone) {
       try {
         const result = await getAllStudentData(storedPhone);
         
@@ -50,27 +49,11 @@ export default function Dashboard() {
           setAttendance(result.data.attendance);
           localStorage.setItem('loggedInStudent', JSON.stringify(result.data.student));
         } else {
-          toast.error('Gagal memuat data dari Google Sheets');
-          // Fallback to mock data
-          const mockScores = getMockScores(parsedStudent.nama);
-          const mockAttendance = getMockAttendance(parsedStudent.nama);
-          setScores(mockScores);
-          setAttendance(mockAttendance);
+          toast.error('Gagal memuat data dari server');
         }
       } catch (error) {
         toast.error('Terjadi kesalahan saat memuat data');
-        // Fallback to mock data
-        const mockScores = getMockScores(parsedStudent.nama);
-        const mockAttendance = getMockAttendance(parsedStudent.nama);
-        setScores(mockScores);
-        setAttendance(mockAttendance);
       }
-    } else {
-      // Use mock data
-      const mockScores = getMockScores(parsedStudent.nama);
-      const mockAttendance = getMockAttendance(parsedStudent.nama);
-      setScores(mockScores);
-      setAttendance(mockAttendance);
     }
 
     setIsLoading(false);
@@ -101,27 +84,36 @@ export default function Dashboard() {
     toast.info('Menyiapkan PDF...');
 
     try {
+      // Add PDF class for smaller styling
+      reportRef.current.classList.add('pdf-mode');
+      
       const element = reportRef.current;
       const opt = {
-        margin: [10, 10, 10, 10] as [number, number, number, number],
+        margin: [5, 5, 5, 5] as [number, number, number, number],
         filename: `Raport_${student.nama.replace(/\s+/g, '_')}.pdf`,
-        image: { type: 'jpeg' as const, quality: 0.98 },
+        image: { type: 'jpeg' as const, quality: 0.95 },
         html2canvas: { 
-          scale: 2,
+          scale: 1.5,
           useCORS: true,
-          logging: false
+          logging: false,
+          letterRendering: true,
         },
         jsPDF: { 
           unit: 'mm' as const, 
           format: 'a4' as const, 
           orientation: 'portrait' as const
-        }
+        },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
       };
 
       await html2pdf().set(opt).from(element).save();
       toast.success('PDF berhasil diunduh!');
+      
+      // Remove PDF class
+      reportRef.current.classList.remove('pdf-mode');
     } catch (error) {
       toast.error('Gagal membuat PDF. Silakan coba lagi.');
+      reportRef.current?.classList.remove('pdf-mode');
     } finally {
       setIsGeneratingPdf(false);
     }
@@ -144,9 +136,7 @@ export default function Dashboard() {
       <header className="bg-card border-b border-border sticky top-0 z-50 no-print">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg gradient-primary flex items-center justify-center">
-              <GraduationCap className="w-5 h-5 text-primary-foreground" />
-            </div>
+            <img src={logo} alt="Logo" className="w-10 h-10 rounded-lg object-contain" />
             <div>
               <h1 className="text-lg font-bold text-foreground">E-Raport Siswa</h1>
               <p className="text-xs text-muted-foreground hidden sm:block">Portal Akademik Digital</p>
@@ -224,7 +214,7 @@ export default function Dashboard() {
           <p className="text-muted-foreground">Periode: {new Date().getFullYear()}</p>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-4">
           {/* Student Identity */}
           <StudentIdentityCard student={student} />
 
@@ -232,23 +222,26 @@ export default function Dashboard() {
           <AttendanceSummary attendance={attendance} />
 
           {/* Score Tables */}
-          <div className="space-y-6">
+          <div className="space-y-4">
             <ScoreTable 
               title="Nilai TKA (Tes Kemampuan Akademik)" 
               scores={scores.tka}
               colorClass="gradient-primary"
+              compact
             />
             
             <ScoreTable 
               title="Nilai Tes Evaluasi" 
               scores={scores.tesEvaluasi}
               colorClass="bg-success"
+              compact
             />
             
             <ScoreTable 
               title="Nilai Try Out UTBK" 
               scores={scores.utbk}
               colorClass="bg-accent"
+              compact
             />
 
             {scores.tka.length === 0 && scores.tesEvaluasi.length === 0 && scores.utbk.length === 0 && (
@@ -267,11 +260,12 @@ export default function Dashboard() {
             tkaScores={scores.tka}
             tesEvaluasiScores={scores.tesEvaluasi}
             utbkScores={scores.utbk}
+            compact
           />
         </div>
 
         {/* Footer for PDF */}
-        <div className="mt-8 pt-4 border-t border-border text-center hidden print:block">
+        <div className="mt-6 pt-4 border-t border-border text-center hidden print:block">
           <p className="text-sm text-muted-foreground">
             Dicetak pada: {new Date().toLocaleDateString('id-ID', {
               day: 'numeric',
