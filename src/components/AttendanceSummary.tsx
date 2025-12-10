@@ -1,5 +1,13 @@
 import { Attendance, MonthlyAttendance } from '@/types/student';
-import { CalendarCheck, UserCheck, Stethoscope, FileText, XCircle } from 'lucide-react';
+import { CalendarCheck } from 'lucide-react';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 
 interface AttendanceSummaryProps {
   attendance: Attendance[];
@@ -59,61 +67,61 @@ export function AttendanceSummary({ attendance }: AttendanceSummaryProps) {
 
   return (
     <div className="bg-card rounded-xl shadow-card p-6 animate-slide-up" style={{ animationDelay: '0.1s' }}>
-      <div className="flex items-center gap-3 mb-6">
+      <div className="flex items-center gap-3 mb-4">
         <div className="w-10 h-10 rounded-lg bg-success/10 flex items-center justify-center">
           <CalendarCheck className="w-5 h-5 text-success" />
         </div>
         <h3 className="text-xl font-bold text-foreground">Rekap Kehadiran</h3>
       </div>
 
-      <div className="space-y-4">
-        {monthlyAttendance.map((month, index) => (
-          <div 
-            key={`${month.bulan}-${month.tahun}`} 
-            className="p-4 bg-muted/50 rounded-lg"
-          >
-            <h4 className="font-semibold text-foreground mb-3">
-              {month.bulan} {month.tahun}
-            </h4>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <div className="flex items-center gap-2 p-2 bg-success/10 rounded-lg">
-                <UserCheck className="w-4 h-4 text-success" />
-                <div>
-                  <p className="text-xs text-muted-foreground">Hadir</p>
-                  <p className="font-bold text-success">{month.hadir}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2 p-2 bg-warning/10 rounded-lg">
-                <Stethoscope className="w-4 h-4 text-warning" />
-                <div>
-                  <p className="text-xs text-muted-foreground">Sakit</p>
-                  <p className="font-bold text-warning">{month.sakit}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2 p-2 bg-info/10 rounded-lg">
-                <FileText className="w-4 h-4 text-info" />
-                <div>
-                  <p className="text-xs text-muted-foreground">Izin</p>
-                  <p className="font-bold text-info">{month.izin}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2 p-2 bg-destructive/10 rounded-lg">
-                <XCircle className="w-4 h-4 text-destructive" />
-                <div>
-                  <p className="text-xs text-muted-foreground">Alpha</p>
-                  <p className="font-bold text-destructive">{month.alpha}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
-
-        {monthlyAttendance.length === 0 && (
-          <div className="text-center py-8 text-muted-foreground">
-            Belum ada data kehadiran
-          </div>
-        )}
-      </div>
+      {monthlyAttendance.length > 0 ? (
+        <div className="rounded-lg border overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-muted/50">
+                <TableHead className="font-semibold">Bulan</TableHead>
+                <TableHead className="text-center font-semibold text-success">Hadir</TableHead>
+                <TableHead className="text-center font-semibold text-warning">Sakit</TableHead>
+                <TableHead className="text-center font-semibold text-info">Izin</TableHead>
+                <TableHead className="text-center font-semibold text-destructive">Alpha</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {monthlyAttendance.map((month) => (
+                <TableRow key={`${month.bulan}-${month.tahun}`}>
+                  <TableCell className="font-medium">
+                    {month.bulan} {month.tahun}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-success/10 text-success font-bold text-sm">
+                      {month.hadir}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-center">
+                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-warning/10 text-warning font-bold text-sm">
+                      {month.sakit}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-center">
+                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-info/10 text-info font-bold text-sm">
+                      {month.izin}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-center">
+                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-destructive/10 text-destructive font-bold text-sm">
+                      {month.alpha}
+                    </span>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      ) : (
+        <div className="text-center py-6 text-muted-foreground">
+          Belum ada data kehadiran
+        </div>
+      )}
     </div>
   );
 }
