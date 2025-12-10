@@ -44,11 +44,17 @@ export const loginByPhone = async (phone: string): Promise<ApiResponse<Student>>
   }
 
   try {
-    const response = await fetch(`${url}?action=login&phone=${encodeURIComponent(phone)}`);
+    // Gunakan mode no-cors tidak bisa karena tidak bisa baca response
+    // Google Apps Script perlu diakses dengan redirect mode
+    const response = await fetch(`${url}?action=login&phone=${encodeURIComponent(phone)}`, {
+      method: 'GET',
+      redirect: 'follow',
+    });
     const result = await response.json();
     return result;
   } catch (error) {
-    return { success: false, error: 'Gagal terhubung ke server. Periksa koneksi internet Anda.' };
+    console.error('Login error:', error);
+    return { success: false, error: 'Gagal terhubung ke server. Pastikan URL Apps Script sudah di-deploy dengan benar dan akses diset ke "Anyone".' };
   }
 };
 
@@ -61,11 +67,15 @@ export const getAllStudentData = async (phone: string): Promise<ApiResponse<AllS
   }
 
   try {
-    const response = await fetch(`${url}?action=getAllData&phone=${encodeURIComponent(phone)}`);
+    const response = await fetch(`${url}?action=getAllData&phone=${encodeURIComponent(phone)}`, {
+      method: 'GET',
+      redirect: 'follow',
+    });
     const result = await response.json();
     return result;
   } catch (error) {
-    return { success: false, error: 'Gagal terhubung ke server. Periksa koneksi internet Anda.' };
+    console.error('GetAllData error:', error);
+    return { success: false, error: 'Gagal terhubung ke server. Pastikan URL Apps Script sudah di-deploy dengan benar.' };
   }
 };
 
