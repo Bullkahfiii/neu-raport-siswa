@@ -221,96 +221,83 @@
   }
 }
 
-/* PDF specific styles - ensure solid colors */
+/* PDF MODE – versi yang tidak membuat tampilan pucat */
 .pdf-mode {
-  background-color: hsl(0, 0%, 100%) !important;
+  background-color: #ffffff !important;
 }
 
+/* Jangan buat seluruh elemen pucat, cukup aktifkan pewarnaan */
 .pdf-mode * {
   print-color-adjust: exact !important;
   -webkit-print-color-adjust: exact !important;
 }
 
+/* Card tetap putih */
 .pdf-mode .bg-card {
-  background-color: hsl(0, 0%, 100%) !important;
+  background-color: #ffffff !important;
 }
 
+/* Muted background (box soft) — jangan terlalu pucat */
 .pdf-mode .bg-muted\/50 {
-  background-color: hsl(0, 10%, 96%) !important;
+  background-color: hsl(0, 10%, 92%) !important;
 }
 
+/* Fix warna /10 agar tetap terlihat jelas (75% lightness) */
 .pdf-mode .bg-success\/10 {
-  background-color: hsl(142, 70%, 90%) !important;
+  background-color: hsl(142, 70%, 75%) !important;
 }
 
 .pdf-mode .bg-warning\/10 {
-  background-color: hsl(38, 92%, 90%) !important;
+  background-color: hsl(38, 92%, 75%) !important;
 }
 
 .pdf-mode .bg-destructive\/10 {
-  background-color: hsl(0, 72%, 90%) !important;
+  background-color: hsl(0, 72%, 75%) !important;
 }
 
 .pdf-mode .bg-info\/10 {
-  background-color: hsl(0, 72%, 90%) !important;
+  background-color: hsl(200, 90%, 75%) !important;
 }
 
-.pdf-mode .bg-primary\/10 {
-  background-color: hsl(0, 72%, 90%) !important;
-}
-
-.pdf-mode .bg-accent\/10 {
-  background-color: hsl(0, 72%, 90%) !important;
-}
-
+/* Full colors (solid) */
 .pdf-mode .bg-success {
   background-color: hsl(142, 70%, 45%) !important;
 }
-
 .pdf-mode .bg-warning {
   background-color: hsl(38, 92%, 50%) !important;
 }
-
 .pdf-mode .bg-destructive {
   background-color: hsl(0, 72%, 51%) !important;
 }
+.pdf-mode .bg-info {
+  background-color: hsl(200, 90%, 50%) !important;
+}
 
+/* Fix text colors (gunakan warna asli, jangan merah) */
 .pdf-mode .text-success {
   color: hsl(142, 70%, 35%) !important;
 }
-
 .pdf-mode .text-warning {
   color: hsl(38, 92%, 40%) !important;
 }
-
 .pdf-mode .text-destructive {
   color: hsl(0, 72%, 41%) !important;
 }
-
 .pdf-mode .text-info {
-  color: hsl(0, 72%, 41%) !important;
+  color: hsl(200, 90%, 40%) !important;
 }
 
-.pdf-mode .text-primary {
-  color: hsl(0, 72%, 41%) !important;
-}
-
-.pdf-mode .text-foreground {
-  color: hsl(0, 0%, 15%) !important;
-}
-
-.pdf-mode .text-muted-foreground {
-  color: hsl(0, 5%, 35%) !important;
-}
-
+/* Border */
 .pdf-mode .border {
-  border-color: hsl(0, 10%, 85%) !important;
+  border-color: hsl(0, 0%, 80%) !important;
 }
 
+/* Shadow tetap tipis tapi tidak hilang */
 .pdf-mode .shadow-card {
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15) !important;
 }
 
+/* Ukuran tabel untuk PDF */
 .pdf-mode table {
   font-size: 11px !important;
 }
