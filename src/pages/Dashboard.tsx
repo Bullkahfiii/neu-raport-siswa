@@ -186,7 +186,7 @@ export default function Dashboard() {
             
             <ScoreTable title="Nilai Tes Evaluasi" scores={scores.tesEvaluasi} colorClass="bg-success" compact />
             
-            <ScoreTable title="Nilai Try Out UTBK" scores={scores.utbk} colorClass="bg-accent" compact />
+            <ScoreTable title="Nilai Try Out UTBK" scores={scores.utbk} colorClass="bg-accent" compact isUtbk />
 
             {scores.tka.length === 0 && scores.tesEvaluasi.length === 0 && scores.utbk.length === 0 && <div className="bg-card rounded-xl shadow-card p-12 text-center">
                 <FileText className="w-12 h-12 text-muted-foreground mx-auto mb-4" />

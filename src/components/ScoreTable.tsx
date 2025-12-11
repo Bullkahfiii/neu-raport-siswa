@@ -7,9 +7,30 @@ interface ScoreTableProps {
   scores: TestScore[];
   colorClass: string;
   compact?: boolean;
+  isUtbk?: boolean;
 }
 
-export function ScoreTable({ title, scores, colorClass, compact = false }: ScoreTableProps) {
+const getUtbkScoreColor = (score: number) => {
+  if (score >= 620) {
+    return 'bg-success text-success-foreground';
+  } else if (score >= 501) {
+    return 'bg-warning text-warning-foreground';
+  } else {
+    return 'bg-destructive text-destructive-foreground';
+  }
+};
+
+const getRegularScoreColor = (score: number) => {
+  if (score >= 80) {
+    return 'bg-success/10 text-success';
+  } else if (score >= 60) {
+    return 'bg-warning/10 text-warning';
+  } else {
+    return 'bg-destructive/10 text-destructive';
+  }
+};
+
+export function ScoreTable({ title, scores, colorClass, compact = false, isUtbk = false }: ScoreTableProps) {
   if (scores.length === 0) return null;
 
   const allSubjects = Array.from(
@@ -54,21 +75,24 @@ export function ScoreTable({ title, scores, colorClass, compact = false }: Score
                     })}
                   </TableCell>
                   <TableCell className={`font-medium text-foreground ${compact ? 'py-1.5 px-2' : ''}`}>{score.namaTes}</TableCell>
-                  {allSubjects.map(subject => (
-                    <TableCell key={subject} className={`text-center ${compact ? 'py-1.5 px-1' : ''}`}>
-                      <span className={`inline-block ${compact ? 'px-1.5 py-0.5 text-xs' : 'px-2 py-1 text-sm'} rounded-md font-medium ${
-                        score.nilai[subject] >= 80 
-                          ? 'bg-success/10 text-success' 
-                          : score.nilai[subject] >= 60 
-                            ? 'bg-warning/10 text-warning'
-                            : 'bg-destructive/10 text-destructive'
-                      }`}>
-                        {score.nilai[subject] ?? '-'}
-                      </span>
-                    </TableCell>
-                  ))}
+                  {allSubjects.map(subject => {
+                    const scoreValue = score.nilai[subject];
+                    const colorClass = isUtbk 
+                      ? getUtbkScoreColor(scoreValue) 
+                      : getRegularScoreColor(scoreValue);
+                    
+                    return (
+                      <TableCell key={subject} className={`text-center ${compact ? 'py-1.5 px-1' : ''}`}>
+                        <span className={`inline-block ${compact ? 'px-1.5 py-0.5 text-xs' : 'px-2 py-1 text-sm'} rounded-md font-medium ${colorClass}`}>
+                          {scoreValue ?? '-'}
+                        </span>
+                      </TableCell>
+                    );
+                  })}
                   <TableCell className={`text-center ${compact ? 'py-1.5 px-2' : ''}`}>
-                    <span className={`inline-block ${compact ? 'px-2 py-0.5 text-xs' : 'px-3 py-1 text-sm'} rounded-md font-bold bg-primary/10 text-primary`}>
+                    <span className={`inline-block ${compact ? 'px-2 py-0.5 text-xs' : 'px-3 py-1 text-sm'} rounded-md font-bold ${
+                      isUtbk ? getUtbkScoreColor(average) : 'bg-primary/10 text-primary'
+                    }`}>
                       {average.toFixed(1)}
                     </span>
                   </TableCell>

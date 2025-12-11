@@ -221,16 +221,101 @@
   }
 }
 
-/* PDF specific styles */
-.pdf-table {
-  font-size: 10px !important;
+/* PDF specific styles - ensure solid colors */
+.pdf-mode {
+  background-color: hsl(0, 0%, 100%) !important;
 }
 
-.pdf-table th,
-.pdf-table td {
-  padding: 4px 6px !important;
+.pdf-mode * {
+  print-color-adjust: exact !important;
+  -webkit-print-color-adjust: exact !important;
 }
 
-.pdf-chart {
-  max-height: 200px !important;
+.pdf-mode .bg-card {
+  background-color: hsl(0, 0%, 100%) !important;
+}
+
+.pdf-mode .bg-muted\/50 {
+  background-color: hsl(0, 10%, 96%) !important;
+}
+
+.pdf-mode .bg-success\/10 {
+  background-color: hsl(142, 70%, 90%) !important;
+}
+
+.pdf-mode .bg-warning\/10 {
+  background-color: hsl(38, 92%, 90%) !important;
+}
+
+.pdf-mode .bg-destructive\/10 {
+  background-color: hsl(0, 72%, 90%) !important;
+}
+
+.pdf-mode .bg-info\/10 {
+  background-color: hsl(0, 72%, 90%) !important;
+}
+
+.pdf-mode .bg-primary\/10 {
+  background-color: hsl(0, 72%, 90%) !important;
+}
+
+.pdf-mode .bg-accent\/10 {
+  background-color: hsl(0, 72%, 90%) !important;
+}
+
+.pdf-mode .bg-success {
+  background-color: hsl(142, 70%, 45%) !important;
+}
+
+.pdf-mode .bg-warning {
+  background-color: hsl(38, 92%, 50%) !important;
+}
+
+.pdf-mode .bg-destructive {
+  background-color: hsl(0, 72%, 51%) !important;
+}
+
+.pdf-mode .text-success {
+  color: hsl(142, 70%, 35%) !important;
+}
+
+.pdf-mode .text-warning {
+  color: hsl(38, 92%, 40%) !important;
+}
+
+.pdf-mode .text-destructive {
+  color: hsl(0, 72%, 41%) !important;
+}
+
+.pdf-mode .text-info {
+  color: hsl(0, 72%, 41%) !important;
+}
+
+.pdf-mode .text-primary {
+  color: hsl(0, 72%, 41%) !important;
+}
+
+.pdf-mode .text-foreground {
+  color: hsl(0, 0%, 15%) !important;
+}
+
+.pdf-mode .text-muted-foreground {
+  color: hsl(0, 5%, 35%) !important;
+}
+
+.pdf-mode .border {
+  border-color: hsl(0, 10%, 85%) !important;
+}
+
+.pdf-mode .shadow-card {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}
+
+.pdf-mode table {
+  font-size: 11px !important;
+}
+
+.pdf-mode th,
+.pdf-mode td {
+  padding: 6px 8px !important;
 }

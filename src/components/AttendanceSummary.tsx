@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Attendance, MonthlyAttendance } from '@/types/student';
 import { CalendarCheck } from 'lucide-react';
 import {
@@ -8,6 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { AttendanceCalendar } from './AttendanceCalendar';
 
 interface AttendanceSummaryProps {
   attendance: Attendance[];
@@ -19,6 +21,8 @@ const MONTH_NAMES = [
 ];
 
 export function AttendanceSummary({ attendance }: AttendanceSummaryProps) {
+  const [selectedMonth, setSelectedMonth] = useState<{ month: number; year: number } | null>(null);
+
   const getMonthlyAttendance = (): MonthlyAttendance[] => {
     const monthlyData: Record<string, MonthlyAttendance> = {};
 
@@ -65,6 +69,11 @@ export function AttendanceSummary({ attendance }: AttendanceSummaryProps) {
 
   const monthlyAttendance = getMonthlyAttendance();
 
+  const handleMonthClick = (bulan: string, tahun: number) => {
+    const monthIndex = MONTH_NAMES.indexOf(bulan);
+    setSelectedMonth({ month: monthIndex, year: tahun });
+  };
+
   return (
     <div className="bg-card rounded-xl shadow-card p-6 animate-slide-up" style={{ animationDelay: '0.1s' }}>
       <div className="flex items-center gap-3 mb-4">
@@ -89,7 +98,10 @@ export function AttendanceSummary({ attendance }: AttendanceSummaryProps) {
             <TableBody>
               {monthlyAttendance.map((month) => (
                 <TableRow key={`${month.bulan}-${month.tahun}`}>
-                  <TableCell className="font-medium">
+                  <TableCell 
+                    className="font-medium cursor-pointer hover:text-primary hover:underline transition-colors"
+                    onClick={() => handleMonthClick(month.bulan, month.tahun)}
+                  >
                     {month.bulan} {month.tahun}
                   </TableCell>
                   <TableCell className="text-center">
@@ -121,6 +133,17 @@ export function AttendanceSummary({ attendance }: AttendanceSummaryProps) {
         <div className="text-center py-6 text-muted-foreground">
           Belum ada data kehadiran
         </div>
+      )}
+
+      {/* Calendar Dialog */}
+      {selectedMonth && (
+        <AttendanceCalendar
+          isOpen={!!selectedMonth}
+          onClose={() => setSelectedMonth(null)}
+          month={selectedMonth.month}
+          year={selectedMonth.year}
+          attendance={attendance}
+        />
       )}
     </div>
   );
