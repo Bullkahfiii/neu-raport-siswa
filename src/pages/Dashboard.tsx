@@ -5,7 +5,6 @@ import { getAllStudentData } from '@/services/googleSheetsApi';
 import { StudentIdentityCard } from '@/components/StudentIdentityCard';
 import { AttendanceSummary } from '@/components/AttendanceSummary';
 import { ScoreTable } from '@/components/ScoreTable';
-import { ProgressChart } from '@/components/ProgressChart';
 import { Button } from '@/components/ui/button';
 import { LogOut, Download, FileText, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
@@ -196,9 +195,6 @@ export default function Dashboard() {
                 </p>
               </div>}
           </div>
-
-          {/* Progress Chart */}
-          <ProgressChart tkaScores={scores.tka} tesEvaluasiScores={scores.tesEvaluasi} utbkScores={scores.utbk} compact />
         </div>
 
         {/* Footer for PDF */}
