@@ -37,7 +37,7 @@ export default function Login() {
             <img src={logo} alt="Logo" className="w-12 h-12 rounded-xl object-contain" />
             <div>
               <h1 className="text-xl font-bold text-foreground">Bubat Hebat</h1>
-              <p className="text-sm text-muted-foreground">E-Raport Digital</p>
+              <p className="text-sm text-muted-foreground">Neu-Raport Digital</p>
             </div>
           </div>
         </div>
