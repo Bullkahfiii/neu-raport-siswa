@@ -126,7 +126,7 @@ export default function Dashboard() {
             <img src={logo} alt="Logo" className="w-10 h-10 rounded-lg object-contain" />
             <div>
               <h1 className="text-lg font-bold text-foreground">Bubat Hebat</h1>
-              <p className="text-xs text-muted-foreground hidden sm:block">E-Raport Digital</p>
+              <p className="text-xs text-muted-foreground hidden sm:block">Neu-Raport Digital</p>
             </div>
           </div>
 
