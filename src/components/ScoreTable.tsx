@@ -175,14 +175,14 @@ export function ScoreTable({ title, scores, colorClass, compact = false, isUtbk 
                     
                     return (
                       <TableCell key={subject} className={`text-center ${compact ? 'py-1.5 px-1' : ''}`}>
-                        <span className={`inline-block ${compact ? 'px-1.5 py-0.5 text-xs' : 'px-2 py-1 text-sm'} rounded-md font-medium ${scoreColorClass}`}>
+                        <span className={`score-badge inline-flex items-center justify-center ${compact ? 'min-w-[40px] px-1.5 py-0.5 text-xs' : 'min-w-[50px] px-2 py-1 text-sm'} rounded-md font-medium ${scoreColorClass}`}>
                           {scoreValue ?? '-'}
                         </span>
                       </TableCell>
                     );
                   })}
                   <TableCell className={`text-center ${compact ? 'py-1.5 px-2' : ''}`}>
-                    <span className={`inline-block ${compact ? 'px-2 py-0.5 text-xs' : 'px-3 py-1 text-sm'} rounded-md font-bold ${
+                    <span className={`score-badge inline-flex items-center justify-center ${compact ? 'min-w-[45px] px-2 py-0.5 text-xs' : 'min-w-[55px] px-3 py-1 text-sm'} rounded-md font-bold ${
                       isUtbk ? getUtbkScoreColor(average) : getRegularScoreColor(average)
                     }`}>
                       {average.toFixed(1)}

@@ -328,41 +328,36 @@
   color: hsl(200, 90%, 40%) !important;
 }
 
-/* --- FIX PDF: Center numbers in capsules --- */
-.pdf-mode .inline-flex,
-.pdf-mode .inline-block {
+/* --- FIX PDF: Center numbers in score badges --- */
+.pdf-mode .score-badge {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
   text-align: center !important;
   vertical-align: middle !important;
+  line-height: 1.2 !important;
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
 }
 
-/* Fix rounded capsules in PDF */
-.pdf-mode .rounded-full,
-.pdf-mode .rounded-md {
+/* Fix attendance badges in PDF */
+.pdf-mode .rounded-full {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  min-width: max-content !important;
+  text-align: center !important;
   line-height: 1 !important;
-}
-
-/* Ensure score badges are properly sized and centered */
-.pdf-mode span[class*="rounded-"] {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  box-sizing: border-box !important;
 }
 
 /* Fix table cell alignment */
 .pdf-mode td.text-center {
   vertical-align: middle !important;
+  text-align: center !important;
 }
 
 .pdf-mode td.text-center > span {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
+  margin: 0 auto !important;
 }
