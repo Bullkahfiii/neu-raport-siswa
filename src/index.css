@@ -313,17 +313,56 @@
 .pdf-mode .bg-muted\/50,
 .pdf-mode .bg-secondary,
 .pdf-mode .bg-secondary\/50 {
-  background-color: hsl(0, 0%, 90%) !important; /* dari 96% jadi 90% supaya tidak pucat */
+  background-color: hsl(0, 0%, 90%) !important;
 }
 
 .pdf-mode [class*="bg-"] {
-  opacity: 1 !important; /* hilangkan efek transparan/50 */
+  opacity: 1 !important;
 }
 
 .pdf-mode .text-muted-foreground {
-  color: hsl(0, 0%, 40%) !important; /* teks jadi lebih jelas */
+  color: hsl(0, 0%, 40%) !important;
 }
 
 .pdf-mode .text-info {
-  color: hsl(200, 90%, 40%) !important; /* info biru */
+  color: hsl(200, 90%, 40%) !important;
+}
+
+/* --- FIX PDF: Center numbers in capsules --- */
+.pdf-mode .inline-flex,
+.pdf-mode .inline-block {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+
+/* Fix rounded capsules in PDF */
+.pdf-mode .rounded-full,
+.pdf-mode .rounded-md {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: max-content !important;
+  line-height: 1 !important;
+}
+
+/* Ensure score badges are properly sized and centered */
+.pdf-mode span[class*="rounded-"] {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+}
+
+/* Fix table cell alignment */
+.pdf-mode td.text-center {
+  vertical-align: middle !important;
+}
+
+.pdf-mode td.text-center > span {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
