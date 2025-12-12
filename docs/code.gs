@@ -79,13 +79,14 @@ function loginByPhone(phone) {
     nis: 2,          // C
     asalSekolah: 3,  // D
     kelas: 4,        // E
-    kurikulum: 5,    // F
-    nomorWA: 6,      // G
-    nomorWAOrangTua: 7, // H
-    email: 8,        // I
-    tanggalLahir: 9, // J
-    rumpun: 10,      // K
-    program: 11,     // L
+    foto: 5,         // F - Link foto siswa
+    kurikulum: 6,    // G
+    nomorWA: 7,      // H
+    nomorWAOrangTua: 8, // I
+    email: 9,        // J
+    tanggalLahir: 10, // K
+    rumpun: 11,      // L
+    program: 12,     // M
     pilihanPTNPertama: 26, // AA
     pilihanPTNKedua: 27    // AB
   };
@@ -102,6 +103,7 @@ function loginByPhone(phone) {
         nama: row[colIndex.nama],
         nis: String(row[colIndex.nis]),
         asalSekolah: row[colIndex.asalSekolah],
+        foto: row[colIndex.foto] || "",
         kelas: row[colIndex.kelas],
         kurikulum: row[colIndex.kurikulum],
         nomorWA: row[colIndex.nomorWA],
