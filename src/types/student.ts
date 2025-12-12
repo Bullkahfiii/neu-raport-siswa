@@ -3,6 +3,7 @@ export interface Student {
   nama: string;
   nis: string;
   asalSekolah: string;
+  foto?: string;
   kelas: string;
   kurikulum: string;
   nomorWA: string;

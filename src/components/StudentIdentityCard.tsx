@@ -9,7 +9,18 @@ export function StudentIdentityCard({ student }: StudentIdentityCardProps) {
   return (
     <div className="bg-card rounded-xl shadow-card p-6 animate-fade-in">
       <div className="flex items-center gap-4 mb-6">
-        <div className="w-16 h-16 rounded-full gradient-primary flex items-center justify-center">
+        {student.foto ? (
+          <img 
+            src={student.foto} 
+            alt={`Foto ${student.nama}`}
+            className="w-16 h-16 rounded-full object-cover border-2 border-primary"
+            onError={(e) => {
+              e.currentTarget.style.display = 'none';
+              e.currentTarget.nextElementSibling?.classList.remove('hidden');
+            }}
+          />
+        ) : null}
+        <div className={`w-16 h-16 rounded-full gradient-primary flex items-center justify-center ${student.foto ? 'hidden' : ''}`}>
           <User className="w-8 h-8 text-primary-foreground" />
         </div>
         <div>
