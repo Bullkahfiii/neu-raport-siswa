@@ -39,6 +39,9 @@
     --info: 200 90% 50%;       
     --info-foreground: 210 40% 98%;
 
+    --purple: 270 70% 55%;
+    --purple-foreground: 0 0% 100%;
+
     --border: 0 10% 90%;
     --input: 0 10% 90%;
     --ring: 0 72% 51%;
@@ -259,6 +262,10 @@
   background-color: hsl(200, 90%, 75%) !important;
 }
 
+.pdf-mode .bg-purple\/10 {
+  background-color: hsl(270, 70%, 80%) !important;
+}
+
 /* Full colors (solid) */
 .pdf-mode .bg-success {
   background-color: hsl(142, 70%, 45%) !important;
@@ -271,6 +278,9 @@
 }
 .pdf-mode .bg-info {
   background-color: hsl(200, 90%, 50%) !important;
+}
+.pdf-mode .bg-purple {
+  background-color: hsl(270, 70%, 55%) !important;
 }
 
 /* Fix text colors (gunakan warna asli, jangan merah) */
@@ -285,6 +295,9 @@
 }
 .pdf-mode .text-info {
   color: hsl(200, 90%, 40%) !important;
+}
+.pdf-mode .text-purple {
+  color: hsl(270, 70%, 45%) !important;
 }
 
 /* Border */

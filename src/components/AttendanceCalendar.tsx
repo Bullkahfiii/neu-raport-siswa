@@ -28,8 +28,8 @@ export function AttendanceCalendar({ isOpen, onClose, month, year, attendance }:
         return 'bg-warning text-warning-foreground';
       case 'Izin':
         return 'bg-info text-info-foreground';
-      case 'Alpha':
-        return 'bg-destructive text-destructive-foreground';
+      case 'Tambahan':
+        return 'bg-purple text-purple-foreground';
       default:
         return 'bg-muted text-muted-foreground';
     }
@@ -83,8 +83,8 @@ export function AttendanceCalendar({ isOpen, onClose, month, year, attendance }:
               <span>Izin</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <div className="w-4 h-4 rounded bg-destructive" />
-              <span>Alpha</span>
+              <div className="w-4 h-4 rounded bg-purple" />
+              <span>Tambahan</span>
             </div>
           </div>
 
