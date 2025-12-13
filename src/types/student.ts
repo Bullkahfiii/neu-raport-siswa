@@ -29,7 +29,7 @@ export interface Attendance {
   namaSiswa: string;
   kelas: string;
   tanggal: string;
-  status: 'Hadir' | 'Sakit' | 'Izin' | 'Alpha';
+  status: 'Hadir' | 'Sakit' | 'Izin' | 'Tambahan';
 }
 
 export interface MonthlyAttendance {
@@ -38,5 +38,5 @@ export interface MonthlyAttendance {
   hadir: number;
   sakit: number;
   izin: number;
-  alpha: number;
+  tambahan: number;
 }

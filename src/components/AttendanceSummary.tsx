@@ -39,7 +39,7 @@ export function AttendanceSummary({ attendance }: AttendanceSummaryProps) {
           hadir: 0,
           sakit: 0,
           izin: 0,
-          alpha: 0
+          tambahan: 0
         };
       }
 
@@ -53,8 +53,8 @@ export function AttendanceSummary({ attendance }: AttendanceSummaryProps) {
         case 'Izin':
           monthlyData[key].izin++;
           break;
-        case 'Alpha':
-          monthlyData[key].alpha++;
+        case 'Tambahan':
+          monthlyData[key].tambahan++;
           break;
       }
     });
@@ -92,7 +92,7 @@ export function AttendanceSummary({ attendance }: AttendanceSummaryProps) {
                 <TableHead className="text-center font-semibold text-success">Hadir</TableHead>
                 <TableHead className="text-center font-semibold text-warning">Sakit</TableHead>
                 <TableHead className="text-center font-semibold text-info">Izin</TableHead>
-                <TableHead className="text-center font-semibold text-destructive">Alpha</TableHead>
+                <TableHead className="text-center font-semibold text-purple">Tambahan</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -130,10 +130,10 @@ export function AttendanceSummary({ attendance }: AttendanceSummaryProps) {
                   </TableCell>
                   <TableCell className="text-center">
                     <span 
-                      className="attendance-badge rounded-full bg-destructive/10 text-destructive font-bold text-sm"
+                      className="attendance-badge rounded-full bg-purple/10 text-purple font-bold text-sm"
                       style={{ display: 'inline-block', width: '32px', height: '32px', lineHeight: '32px', textAlign: 'center' }}
                     >
-                      {month.alpha}
+                      {month.tambahan}
                     </span>
                   </TableCell>
                 </TableRow>
