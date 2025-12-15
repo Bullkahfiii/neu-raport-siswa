@@ -19,7 +19,14 @@ const MONTH_NAMES = [
 
 const DAY_NAMES = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
 
-export function AttendanceCalendar({ isOpen, onClose, month, year, attendance }: AttendanceCalendarProps) {
+export function AttendanceCalendar({
+  isOpen,
+  onClose,
+  month,
+  year,
+  attendance,
+}: AttendanceCalendarProps) {
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'Hadir':
@@ -28,8 +35,6 @@ export function AttendanceCalendar({ isOpen, onClose, month, year, attendance }:
         return 'bg-warning text-warning-foreground';
       case 'Izin':
         return 'bg-info text-info-foreground';
-      case 'Tambahan':
-        return 'bg-purple text-purple-foreground';
       default:
         return 'bg-muted text-muted-foreground';
     }
@@ -37,26 +42,27 @@ export function AttendanceCalendar({ isOpen, onClose, month, year, attendance }:
 
   const getStatusForDate = (day: number): string | null => {
     const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+
     const record = attendance.find(a => {
       const aDate = new Date(a.tanggal);
       const aDateStr = `${aDate.getFullYear()}-${String(aDate.getMonth() + 1).padStart(2, '0')}-${String(aDate.getDate()).padStart(2, '0')}`;
       return aDateStr === dateStr;
     });
+
     return record ? record.status : null;
   };
 
-  const getDaysInMonth = (month: number, year: number) => {
-    return new Date(year, month + 1, 0).getDate();
-  };
+  const getDaysInMonth = (month: number, year: number) =>
+    new Date(year, month + 1, 0).getDate();
 
-  const getFirstDayOfMonth = (month: number, year: number) => {
-    return new Date(year, month, 1).getDay();
-  };
+  const getFirstDayOfMonth = (month: number, year: number) =>
+    new Date(year, month, 1).getDay();
 
   const daysInMonth = getDaysInMonth(month, year);
   const firstDay = getFirstDayOfMonth(month, year);
+
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
-  const emptyDays = Array.from({ length: firstDay }, (_, i) => i);
+  const emptyDays = Array.from({ length: firstDay });
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -82,36 +88,37 @@ export function AttendanceCalendar({ isOpen, onClose, month, year, attendance }:
               <div className="w-4 h-4 rounded bg-info" />
               <span>Izin</span>
             </div>
-            <div className="flex items-center gap-1.5">
-              <div className="w-4 h-4 rounded bg-purple" />
-              <span>Tambahan</span>
-            </div>
           </div>
 
           {/* Calendar Grid */}
           <div className="grid grid-cols-7 gap-1">
             {/* Day Headers */}
             {DAY_NAMES.map(day => (
-              <div key={day} className="text-center text-xs font-semibold text-muted-foreground py-2">
+              <div
+                key={day}
+                className="text-center text-xs font-semibold text-muted-foreground py-2"
+              >
                 {day}
               </div>
             ))}
 
-            {/* Empty cells for days before month starts */}
-            {emptyDays.map(i => (
+            {/* Empty cells */}
+            {emptyDays.map((_, i) => (
               <div key={`empty-${i}`} className="aspect-square" />
             ))}
 
-            {/* Calendar Days */}
+            {/* Days */}
             {days.map(day => {
               const status = getStatusForDate(day);
               return (
                 <div
                   key={day}
-                  className={`aspect-square flex items-center justify-center rounded-lg text-sm font-medium transition-colors ${
-                    status ? getStatusColor(status) : 'bg-muted/50 text-muted-foreground'
-                  }`}
                   title={status || 'Tidak ada data'}
+                  className={`aspect-square flex items-center justify-center rounded-lg text-sm font-medium transition-colors ${
+                    status
+                      ? getStatusColor(status)
+                      : 'bg-muted/50 text-muted-foreground'
+                  }`}
                 >
                   {day}
                 </div>
