@@ -1,14 +1,6 @@
 import { useState } from 'react';
 import { Attendance, MonthlyAttendance } from '@/types/student';
 import { CalendarCheck } from 'lucide-react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import { AttendanceCalendar } from './AttendanceCalendar';
 
 interface AttendanceSummaryProps {
@@ -21,12 +13,15 @@ const MONTH_NAMES = [
 ];
 
 export function AttendanceSummary({ attendance }: AttendanceSummaryProps) {
-  const [selectedMonth, setSelectedMonth] = useState<{ month: number; year: number } | null>(null);
+  const [selectedMonth, setSelectedMonth] = useState<{
+    month: number;
+    year: number;
+  } | null>(null);
 
   const getMonthlyAttendance = (): MonthlyAttendance[] => {
     const monthlyData: Record<string, MonthlyAttendance> = {};
 
-    attendance.forEach(a => {
+    attendance.forEach((a) => {
       const date = new Date(a.tanggal);
       const month = date.getMonth();
       const year = date.getFullYear();
@@ -38,7 +33,7 @@ export function AttendanceSummary({ attendance }: AttendanceSummaryProps) {
           tahun: year,
           hadir: 0,
           sakit: 0,
-          izin: 0
+          izin: 0,
         };
       }
 
@@ -56,10 +51,8 @@ export function AttendanceSummary({ attendance }: AttendanceSummaryProps) {
     });
 
     return Object.values(monthlyData).sort((a, b) => {
-      const monthA = MONTH_NAMES.indexOf(a.bulan);
-      const monthB = MONTH_NAMES.indexOf(b.bulan);
       if (a.tahun !== b.tahun) return b.tahun - a.tahun;
-      return monthB - monthA;
+      return MONTH_NAMES.indexOf(b.bulan) - MONTH_NAMES.indexOf(a.bulan);
     });
   };
 
@@ -71,71 +64,67 @@ export function AttendanceSummary({ attendance }: AttendanceSummaryProps) {
   };
 
   return (
-    <div className="bg-card rounded-xl shadow-card p-6 animate-slide-up" style={{ animationDelay: '0.1s' }}>
-      <div className="flex items-center gap-3 mb-4">
+    <div className="bg-card rounded-xl shadow-card p-6 animate-slide-up">
+      {/* Header */}
+      <div className="flex items-center gap-3 mb-6">
         <div className="w-10 h-10 rounded-lg bg-success/10 flex items-center justify-center">
           <CalendarCheck className="w-5 h-5 text-success" />
         </div>
-        <h3 className="text-xl font-bold text-foreground">Rekap Kehadiran</h3>
+        <h3 className="text-xl font-bold text-foreground">
+          Rekap Kehadiran
+        </h3>
       </div>
 
+      {/* Content */}
       {monthlyAttendance.length > 0 ? (
-        <div className="rounded-lg border overflow-hidden">
-          <Table>
-            <TableHeader>
-              <TableRow className="bg-muted/50">
-                <TableHead className="font-semibold">Bulan</TableHead>
-                <TableHead className="text-center font-semibold text-success">Hadir</TableHead>
-                <TableHead className="text-center font-semibold text-warning">Sakit</TableHead>
-                <TableHead className="text-center font-semibold text-info">Izin</TableHead>
-                <TableHead className="text-center font-semibold text-purple">Tambahan</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-  {monthlyAttendance.map((month) => (
-    <div
-      key={`${month.bulan}-${month.tahun}`}
-      className="border rounded-lg p-4 hover:shadow transition"
-    >
-      <div
-        className="font-semibold text-lg cursor-pointer hover:text-primary hover:underline"
-        onClick={() => handleMonthClick(month.bulan, month.tahun)}
-      >
-        {month.bulan} {month.tahun}
-      </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {monthlyAttendance.map((month) => (
+            <div
+              key={`${month.bulan}-${month.tahun}`}
+              className="border rounded-xl p-4 hover:shadow-md transition"
+            >
+              {/* Judul Bulan */}
+              <div
+                onClick={() => handleMonthClick(month.bulan, month.tahun)}
+                className="font-semibold text-lg cursor-pointer hover:text-primary hover:underline"
+              >
+                {month.bulan} {month.tahun}
+              </div>
 
-      <div className="grid grid-cols-3 gap-4 mt-4 text-center">
-        {/* Hadir */}
-        <div>
-          <div className="text-success font-bold text-xl">
-            {month.hadir}
-          </div>
-          <div className="text-sm text-muted-foreground">Hadir</div>
-        </div>
+              {/* Statistik */}
+              <div className="grid grid-cols-3 gap-4 mt-4 text-center">
+                {/* Hadir */}
+                <div>
+                  <div className="w-10 h-10 mx-auto rounded-full bg-success/10 text-success font-bold flex items-center justify-center">
+                    {month.hadir}
+                  </div>
+                  <div className="text-sm mt-1 text-muted-foreground">
+                    Hadir
+                  </div>
+                </div>
 
-        {/* Sakit */}
-        <div>
-          <div className="text-warning font-bold text-xl">
-            {month.sakit}
-          </div>
-          <div className="text-sm text-muted-foreground">Sakit</div>
-        </div>
+                {/* Sakit */}
+                <div>
+                  <div className="w-10 h-10 mx-auto rounded-full bg-warning/10 text-warning font-bold flex items-center justify-center">
+                    {month.sakit}
+                  </div>
+                  <div className="text-sm mt-1 text-muted-foreground">
+                    Sakit
+                  </div>
+                </div>
 
-        {/* Izin */}
-        <div>
-          <div className="text-info font-bold text-xl">
-            {month.izin}
-          </div>
-          <div className="text-sm text-muted-foreground">Izin</div>
-        </div>
-      </div>
-    </div>
-  ))}
-</div>
-
-            </TableBody>
-          </Table>
+                {/* Izin */}
+                <div>
+                  <div className="w-10 h-10 mx-auto rounded-full bg-info/10 text-info font-bold flex items-center justify-center">
+                    {month.izin}
+                  </div>
+                  <div className="text-sm mt-1 text-muted-foreground">
+                    Izin
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       ) : (
         <div className="text-center py-6 text-muted-foreground">
