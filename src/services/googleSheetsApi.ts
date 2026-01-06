@@ -1,4 +1,4 @@
-import { Student, TestScore, Attendance } from '@/types/student';
+import { Student, TestScore, Attendance, TeacherNote } from '@/types/student';
 
 // URL Google Apps Script Web App - Hardcoded
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwlmtgrWGGk7t2BKa5esz__LpGJKykqCU_VDNTTWwsv1ut8_-Vn2WCrUxksaQjKZ2Iz8g/exec';
@@ -17,6 +17,7 @@ export interface AllStudentData {
     utbk: TestScore[];
   };
   attendance: Attendance[];
+  notes: TeacherNote[];
 }
 
 // Check if Apps Script is configured (always true now)

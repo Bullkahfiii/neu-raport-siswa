@@ -34,6 +34,7 @@ export function AttendanceSummary({ attendance }: AttendanceSummaryProps) {
           hadir: 0,
           sakit: 0,
           izin: 0,
+          tambahan: 0,
         };
       }
 

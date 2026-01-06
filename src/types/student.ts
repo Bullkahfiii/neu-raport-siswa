@@ -40,3 +40,10 @@ export interface MonthlyAttendance {
   izin: number;
   tambahan: number;
 }
+
+export interface TeacherNote {
+  namaSiswa: string;
+  tanggal: string;
+  catatan: string;
+  waliKelas?: string;
+}
