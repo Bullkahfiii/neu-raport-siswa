@@ -1,20 +1,23 @@
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Student, TestScore, Attendance } from '@/types/student';
+import { Student, TestScore, Attendance, TeacherNote } from '@/types/student';
 import { getAllStudentData } from '@/services/googleSheetsApi';
 import { StudentIdentityCard } from '@/components/StudentIdentityCard';
 import { AttendanceSummary } from '@/components/AttendanceSummary';
 import { ScoreTable } from '@/components/ScoreTable';
+import { TeacherNotes } from '@/components/TeacherNotes';
 import { Button } from '@/components/ui/button';
 import { LogOut, Download, FileText, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
 import html2pdf from 'html2pdf.js';
 import logo from '@/assets/logo.png';
+
 interface Scores {
   tka: TestScore[];
   tesEvaluasi: TestScore[];
   utbk: TestScore[];
 }
+
 export default function Dashboard() {
   const [student, setStudent] = useState<Student | null>(null);
   const [scores, setScores] = useState<Scores>({
@@ -23,6 +26,7 @@ export default function Dashboard() {
     utbk: []
   });
   const [attendance, setAttendance] = useState<Attendance[]>([]);
+  const [notes, setNotes] = useState<TeacherNote[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   const navigate = useNavigate();
@@ -43,6 +47,7 @@ export default function Dashboard() {
           setStudent(result.data.student);
           setScores(result.data.scores);
           setAttendance(result.data.attendance);
+          setNotes(result.data.notes || []);
           localStorage.setItem('loggedInStudent', JSON.stringify(result.data.student));
         } else {
           toast.error('Gagal memuat data dari server');
@@ -195,6 +200,9 @@ export default function Dashboard() {
                 </p>
               </div>}
           </div>
+
+          {/* Teacher Notes */}
+          <TeacherNotes notes={notes} />
         </div>
 
         {/* Footer for PDF */}
