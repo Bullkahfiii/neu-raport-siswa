@@ -178,11 +178,14 @@ export function ScoreTable({ title, scores, colorClass, compact = false, isUtbk 
                         <span 
                           className={`score-badge ${compact ? 'text-xs' : 'text-sm'} rounded-md font-medium ${scoreColorClass}`}
                           style={{ 
-                            display: 'inline-block',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
                             minWidth: compact ? '40px' : '50px',
-                            padding: compact ? '2px 6px' : '4px 8px',
+                            height: compact ? '24px' : '28px',
+                            padding: compact ? '0 6px' : '0 8px',
                             textAlign: 'center',
-                            lineHeight: '1.4'
+                            lineHeight: '1'
                           }}
                         >
                           {scoreValue ?? '-'}
@@ -196,11 +199,14 @@ export function ScoreTable({ title, scores, colorClass, compact = false, isUtbk 
                         isUtbk ? getUtbkScoreColor(average) : getRegularScoreColor(average)
                       }`}
                       style={{ 
-                        display: 'inline-block',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
                         minWidth: compact ? '45px' : '55px',
-                        padding: compact ? '2px 8px' : '4px 12px',
+                        height: compact ? '24px' : '28px',
+                        padding: compact ? '0 8px' : '0 12px',
                         textAlign: 'center',
-                        lineHeight: '1.4'
+                        lineHeight: '1'
                       }}
                     >
                       {average.toFixed(1)}
