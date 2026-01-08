@@ -40,3 +40,13 @@
 .read-the-docs {
   color: #888;
 }
+
+/* PDF Mode Styles */
+.pdf-mode .pdf-watermark {
+  display: block !important;
+}
+
+.pdf-mode .space-y-4 > * {
+  position: relative;
+  z-index: 1;
+}

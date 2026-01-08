@@ -11,6 +11,7 @@ import { LogOut, Download, FileText, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
 import html2pdf from 'html2pdf.js';
 import logo from '@/assets/logo.png';
+import watermarkLogo from '@/assets/watermark-logo.png';
 
 interface Scores {
   tka: TestScore[];
@@ -170,7 +171,26 @@ export default function Dashboard() {
       </div>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-6" ref={reportRef}>
+      <main className="container mx-auto px-4 py-6 relative" ref={reportRef}>
+        {/* Watermark for PDF */}
+        <div 
+          className="pdf-watermark"
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '300px',
+            height: '300px',
+            opacity: 0.08,
+            pointerEvents: 'none',
+            zIndex: 0,
+            display: 'none'
+          }}
+        >
+          <img src={watermarkLogo} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+        </div>
+
         {/* Page Title for PDF */}
         <div className="text-center mb-6 hidden print:block">
           <h1 className="text-2xl font-bold text-foreground">RAPORT SISWA</h1>
