@@ -168,7 +168,15 @@ export function AttendanceSummary({ attendance }: AttendanceSummaryProps) {
                       <div className="grid grid-cols-3 gap-3 mt-3 text-center">
                         {/* Hadir */}
                         <div>
-                          <div className="w-8 h-8 mx-auto rounded-full bg-success/10 text-success font-bold text-sm flex items-center justify-center">
+                          <div 
+                            className="w-8 h-8 mx-auto rounded-full bg-success/10 text-success font-bold text-sm"
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              lineHeight: '1'
+                            }}
+                          >
                             {month.hadir}
                           </div>
                           <div className="text-xs mt-0.5 text-muted-foreground">
@@ -178,7 +186,15 @@ export function AttendanceSummary({ attendance }: AttendanceSummaryProps) {
 
                         {/* Sakit */}
                         <div>
-                          <div className="w-8 h-8 mx-auto rounded-full bg-warning/10 text-warning font-bold text-sm flex items-center justify-center">
+                          <div 
+                            className="w-8 h-8 mx-auto rounded-full bg-warning/10 text-warning font-bold text-sm"
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              lineHeight: '1'
+                            }}
+                          >
                             {month.sakit}
                           </div>
                           <div className="text-xs mt-0.5 text-muted-foreground">
@@ -188,7 +204,15 @@ export function AttendanceSummary({ attendance }: AttendanceSummaryProps) {
 
                         {/* Izin */}
                         <div>
-                          <div className="w-8 h-8 mx-auto rounded-full bg-info/10 text-info font-bold text-sm flex items-center justify-center">
+                          <div 
+                            className="w-8 h-8 mx-auto rounded-full bg-info/10 text-info font-bold text-sm"
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              lineHeight: '1'
+                            }}
+                          >
                             {month.izin}
                           </div>
                           <div className="text-xs mt-0.5 text-muted-foreground">
