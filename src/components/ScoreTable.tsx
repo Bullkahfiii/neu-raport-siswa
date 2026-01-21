@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { TestScore } from '@/types/student';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableFooter } from '@/components/ui/table';
 import { FileSpreadsheet, TrendingUp, X } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
@@ -216,6 +216,42 @@ export function ScoreTable({ title, scores, colorClass, compact = false, isUtbk 
               );
             })}
           </TableBody>
+          <TableFooter>
+            {(() => {
+              const allAverages = scores.map(score => {
+                const values = Object.values(score.nilai);
+                return values.reduce((a, b) => a + b, 0) / values.length;
+              });
+              const totalAverage = allAverages.reduce((a, b) => a + b, 0) / allAverages.length;
+              
+              return (
+                <TableRow className="bg-muted/70 font-bold">
+                  <TableCell colSpan={2 + allSubjects.length} className={`text-right font-bold text-foreground ${compact ? 'py-2 px-2' : 'py-3'}`}>
+                    Total Rata-rata
+                  </TableCell>
+                  <TableCell className={`text-center ${compact ? 'py-2 px-2' : 'py-3'}`}>
+                    <span 
+                      className={`score-badge ${compact ? 'text-xs' : 'text-sm'} rounded-md font-bold ${
+                        isUtbk ? getUtbkScoreColor(totalAverage) : getRegularScoreColor(totalAverage)
+                      }`}
+                      style={{ 
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        minWidth: compact ? '50px' : '60px',
+                        height: compact ? '26px' : '32px',
+                        padding: compact ? '0 10px' : '0 14px',
+                        textAlign: 'center',
+                        lineHeight: '1'
+                      }}
+                    >
+                      {totalAverage.toFixed(1)}
+                    </span>
+                  </TableCell>
+                </TableRow>
+              );
+            })()}
+          </TableFooter>
         </Table>
       </div>
     </div>
