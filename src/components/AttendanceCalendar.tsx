@@ -122,7 +122,7 @@ export function AttendanceCalendar({
                 >
                   {day}
                   {count > 1 && (
-                    <span className="absolute -top-1 -right-2.5 bg-primary text-primary-foreground text-[9px] font-bold rounded-full min-w-[1.1rem] h-4 flex items-center justify-center shadow-sm px-1">
+                    <span className="absolute -top-1.5 -right-1 bg-destructive text-destructive-foreground text-[9px] font-bold rounded-full min-w-[1.1rem] h-4 flex items-center justify-center shadow-sm px-1 z-10">
                       {count}x
                     </span>
                   )}
