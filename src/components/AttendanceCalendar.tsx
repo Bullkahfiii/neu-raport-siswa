@@ -40,16 +40,14 @@ export function AttendanceCalendar({
     }
   };
 
-  const getStatusForDate = (day: number): string | null => {
+  const getRecordsForDate = (day: number): Attendance[] => {
     const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 
-    const record = attendance.find(a => {
+    return attendance.filter(a => {
       const aDate = new Date(a.tanggal);
       const aDateStr = `${aDate.getFullYear()}-${String(aDate.getMonth() + 1).padStart(2, '0')}-${String(aDate.getDate()).padStart(2, '0')}`;
       return aDateStr === dateStr;
     });
-
-    return record ? record.status : null;
   };
 
   const getDaysInMonth = (month: number, year: number) =>
@@ -109,18 +107,25 @@ export function AttendanceCalendar({
 
             {/* Days */}
             {days.map(day => {
-              const status = getStatusForDate(day);
+              const records = getRecordsForDate(day);
+              const status = records.length > 0 ? records[0].status : null;
+              const count = records.length;
               return (
                 <div
                   key={day}
-                  title={status || 'Tidak ada data'}
-                  className={`aspect-square flex items-center justify-center rounded-lg text-sm font-medium transition-colors ${
+                  title={status ? `${status} (${count}x)` : 'Tidak ada data'}
+                  className={`aspect-square flex items-center justify-center rounded-lg text-sm font-medium transition-colors relative ${
                     status
                       ? getStatusColor(status)
                       : 'bg-muted/50 text-muted-foreground'
                   }`}
                 >
                   {day}
+                  {count > 1 && (
+                    <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center shadow-sm">
+                      {count}
+                    </span>
+                  )}
                 </div>
               );
             })}
