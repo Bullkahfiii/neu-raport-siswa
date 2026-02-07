@@ -46,6 +46,7 @@ export function AttendanceSummary({ attendance }: AttendanceSummaryProps) {
           sakit: 0,
           izin: 0,
           tambahan: 0,
+          terlambat: 0,
         };
       }
 
@@ -58,6 +59,9 @@ export function AttendanceSummary({ attendance }: AttendanceSummaryProps) {
           break;
         case 'Izin':
           monthlyData[key].izin++;
+          break;
+        case 'Terlambat':
+          monthlyData[key].terlambat++;
           break;
       }
     });
@@ -165,7 +169,7 @@ export function AttendanceSummary({ attendance }: AttendanceSummaryProps) {
                       </div>
 
                       {/* Statistik */}
-                      <div className="grid grid-cols-3 gap-3 mt-3 text-center">
+                      <div className="grid grid-cols-4 gap-2 mt-3 text-center">
                         {/* Hadir */}
                         <div>
                           <div 
@@ -217,6 +221,24 @@ export function AttendanceSummary({ attendance }: AttendanceSummaryProps) {
                           </div>
                           <div className="text-xs mt-0.5 text-muted-foreground">
                             Izin
+                          </div>
+                        </div>
+
+                        {/* Terlambat */}
+                        <div>
+                          <div 
+                            className="w-8 h-8 mx-auto rounded-full bg-destructive/10 text-destructive font-bold text-sm"
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              lineHeight: '1'
+                            }}
+                          >
+                            {month.terlambat}
+                          </div>
+                          <div className="text-xs mt-0.5 text-muted-foreground">
+                            Terlambat
                           </div>
                         </div>
                       </div>
