@@ -35,6 +35,8 @@ export function AttendanceCalendar({
         return 'bg-warning text-warning-foreground';
       case 'Izin':
         return 'bg-info text-info-foreground';
+      case 'Terlambat':
+        return 'bg-destructive text-destructive-foreground';
       default:
         return 'bg-muted text-muted-foreground';
     }
@@ -85,6 +87,10 @@ export function AttendanceCalendar({
             <div className="flex items-center gap-1.5">
               <div className="w-4 h-4 rounded bg-info" />
               <span>Izin</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="w-4 h-4 rounded bg-destructive" />
+              <span>Terlambat</span>
             </div>
           </div>
 

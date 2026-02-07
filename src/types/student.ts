@@ -29,7 +29,7 @@ export interface Attendance {
   namaSiswa: string;
   kelas: string;
   tanggal: string;
-  status: 'Hadir' | 'Sakit' | 'Izin' | 'Tambahan';
+  status: 'Hadir' | 'Sakit' | 'Izin' | 'Tambahan' | 'Terlambat';
 }
 
 export interface MonthlyAttendance {
@@ -39,6 +39,7 @@ export interface MonthlyAttendance {
   sakit: number;
   izin: number;
   tambahan: number;
+  terlambat: number;
 }
 
 export interface TeacherNote {
