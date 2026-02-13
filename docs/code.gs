@@ -18,7 +18,8 @@ const CONFIG = {
   SHEET_TKA: "TKA",
   SHEET_TES_EVALUASI: "Tes Evaluasi",
   SHEET_UTBK: "UTBK",
-  SHEET_ABSENSI: "Absensi"
+  SHEET_ABSENSI: "Absensi",
+  SHEET_CATATAN: "Catatan"
 };
 
 // ============================================
@@ -251,14 +252,55 @@ function getAllStudentData(phone) {
   // Get attendance
   const attendanceResult = getStudentAttendance(nama);
 
+  // Get notes
+  const notesResult = getStudentNotes(nama);
+
   return {
     success: true,
     data: {
       student: student,
       scores: scoresResult.data,
-      attendance: attendanceResult.data
+      attendance: attendanceResult.data,
+      notes: notesResult.data
     }
   };
+}
+
+// ============================================
+// FUNGSI GET STUDENT NOTES (Catatan Wali Kelas)
+// ============================================
+function getStudentNotes(nama) {
+  if (!nama) {
+    return { success: true, data: [] };
+  }
+
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName(CONFIG.SHEET_CATATAN);
+  
+  if (!sheet) {
+    return { success: true, data: [] };
+  }
+
+  const data = sheet.getDataRange().getValues();
+  const notes = [];
+
+  // Kolom: A=Nama, B=Catatan
+  for (let i = 1; i < data.length; i++) {
+    const row = data[i];
+    const namaSiswa = String(row[0]).trim().toLowerCase();
+    const inputNama = String(nama).trim().toLowerCase();
+    
+    if (namaSiswa === inputNama) {
+      notes.push({
+        namaSiswa: row[0],
+        tanggal: formatDate(row[2]) || "",
+        catatan: row[1] || "",
+        waliKelas: row[3] || ""
+      });
+    }
+  }
+
+  return { success: true, data: notes };
 }
 
 // ============================================
