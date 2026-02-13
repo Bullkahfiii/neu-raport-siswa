@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { Phone, LogIn } from 'lucide-react';
-import { loginByPhone } from '@/services/googleSheetsApi';
+import { loginByPhone, isAdminPhone } from '@/services/googleSheetsApi';
 import logo from '@/assets/logo.png';
 export default function Login() {
   const [phone, setPhone] = useState('');
@@ -14,14 +14,23 @@ export default function Login() {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const result = await loginByPhone(phone);
-      if (result.success && result.data) {
-        localStorage.setItem('loggedInStudent', JSON.stringify(result.data));
+      if (isAdminPhone(phone)) {
+        localStorage.setItem('isAdmin', 'true');
         localStorage.setItem('loggedInPhone', phone);
-        toast.success(`Selamat datang, ${result.data.nama}!`);
+        localStorage.removeItem('loggedInStudent');
+        toast.success('Selamat datang, Admin!');
         navigate('/dashboard');
       } else {
-        toast.error(result.error || 'Login gagal. Silakan coba lagi.');
+        const result = await loginByPhone(phone);
+        if (result.success && result.data) {
+          localStorage.setItem('loggedInStudent', JSON.stringify(result.data));
+          localStorage.setItem('loggedInPhone', phone);
+          localStorage.removeItem('isAdmin');
+          toast.success(`Selamat datang, ${result.data.nama}!`);
+          navigate('/dashboard');
+        } else {
+          toast.error(result.error || 'Login gagal. Silakan coba lagi.');
+        }
       }
     } catch (error) {
       toast.error('Terjadi kesalahan. Silakan coba lagi.');
