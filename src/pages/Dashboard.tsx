@@ -1,13 +1,14 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Student, TestScore, Attendance, TeacherNote } from '@/types/student';
-import { getAllStudentData } from '@/services/googleSheetsApi';
+import { getAllStudentData, getAllStudents } from '@/services/googleSheetsApi';
 import { StudentIdentityCard } from '@/components/StudentIdentityCard';
 import { AttendanceSummary } from '@/components/AttendanceSummary';
 import { ScoreTable } from '@/components/ScoreTable';
 import { TeacherNotes } from '@/components/TeacherNotes';
 import { Button } from '@/components/ui/button';
-import { LogOut, Download, FileText, RefreshCw } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { LogOut, Download, FileText, RefreshCw, Search, ChevronDown, Users } from 'lucide-react';
 import { toast } from 'sonner';
 import html2pdf from 'html2pdf.js';
 import logo from '@/assets/logo.png';
@@ -30,11 +31,78 @@ export default function Dashboard() {
   const [notes, setNotes] = useState<TeacherNote[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [allStudents, setAllStudents] = useState<Student[]>([]);
+  const [selectedStudentPhone, setSelectedStudentPhone] = useState<string>('');
+  const [studentSearch, setStudentSearch] = useState('');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isLoadingStudents, setIsLoadingStudents] = useState(false);
   const navigate = useNavigate();
   const reportRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const filteredStudents = useMemo(() => {
+    if (!studentSearch) return allStudents;
+    const search = studentSearch.toLowerCase();
+    return allStudents.filter(s => 
+      s.nama.toLowerCase().includes(search) || 
+      s.kelas?.toLowerCase().includes(search) ||
+      s.nis?.toLowerCase().includes(search)
+    );
+  }, [allStudents, studentSearch]);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const loadStudentData = async (phone: string) => {
+    setIsLoading(true);
+    try {
+      const result = await getAllStudentData(phone);
+      if (result.success && result.data) {
+        setStudent(result.data.student);
+        setScores(result.data.scores);
+        setAttendance(result.data.attendance);
+        setNotes(result.data.notes || []);
+      } else {
+        toast.error('Gagal memuat data siswa');
+      }
+    } catch (error) {
+      toast.error('Terjadi kesalahan saat memuat data');
+    }
+    setIsLoading(false);
+  };
+
   const loadData = async () => {
+    const adminFlag = localStorage.getItem('isAdmin');
     const storedStudent = localStorage.getItem('loggedInStudent');
     const storedPhone = localStorage.getItem('loggedInPhone');
+
+    if (adminFlag === 'true') {
+      setIsAdmin(true);
+      setIsLoadingStudents(true);
+      setIsLoading(false);
+      try {
+        const result = await getAllStudents();
+        if (result.success && result.data) {
+          setAllStudents(result.data);
+        } else {
+          toast.error('Gagal memuat daftar siswa');
+        }
+      } catch {
+        toast.error('Gagal memuat daftar siswa');
+      }
+      setIsLoadingStudents(false);
+      return;
+    }
+
     if (!storedStudent) {
       navigate('/');
       return;
@@ -42,26 +110,22 @@ export default function Dashboard() {
     const parsedStudent = JSON.parse(storedStudent) as Student;
     setStudent(parsedStudent);
     if (storedPhone) {
-      try {
-        const result = await getAllStudentData(storedPhone);
-        if (result.success && result.data) {
-          setStudent(result.data.student);
-          setScores(result.data.scores);
-          setAttendance(result.data.attendance);
-          setNotes(result.data.notes || []);
-          localStorage.setItem('loggedInStudent', JSON.stringify(result.data.student));
-        } else {
-          toast.error('Gagal memuat data dari server');
-        }
-      } catch (error) {
-        toast.error('Terjadi kesalahan saat memuat data');
-      }
+      await loadStudentData(storedPhone);
+    } else {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
+
   useEffect(() => {
     loadData();
   }, [navigate]);
+
+  const handleSelectStudent = async (s: Student) => {
+    setSelectedStudentPhone(s.nomorWA);
+    setIsDropdownOpen(false);
+    setStudentSearch('');
+    await loadStudentData(s.nomorWA);
+  };
   const handleRefresh = async () => {
     setIsLoading(true);
     toast.info('Memperbarui data...');
@@ -71,6 +135,7 @@ export default function Dashboard() {
   const handleLogout = () => {
     localStorage.removeItem('loggedInStudent');
     localStorage.removeItem('loggedInPhone');
+    localStorage.removeItem('isAdmin');
     toast.success('Berhasil keluar');
     navigate('/');
   };
@@ -116,6 +181,87 @@ export default function Dashboard() {
       setIsGeneratingPdf(false);
     }
   };
+  // Admin mode: show student selector if no student selected yet
+  if (isAdmin && !student) {
+    return <div className="min-h-screen bg-background">
+      <header className="bg-card border-b border-border sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <img src={logo} alt="Logo" className="w-10 h-10 rounded-lg object-contain" />
+            <div>
+              <h1 className="text-lg font-bold text-foreground">Bubat Hebat</h1>
+              <p className="text-xs text-muted-foreground">Mode Admin</p>
+            </div>
+          </div>
+          <Button variant="ghost" size="sm" onClick={handleLogout}>
+            <LogOut className="w-4 h-4" />
+            <span className="hidden sm:inline ml-2">Keluar</span>
+          </Button>
+        </div>
+      </header>
+      <main className="container mx-auto px-4 py-8">
+        <div className="max-w-lg mx-auto">
+          <div className="bg-card rounded-2xl shadow-card p-6">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                <Users className="w-5 h-5 text-primary" />
+              </div>
+              <div>
+                <h2 className="text-lg font-bold text-foreground">Pilih Siswa</h2>
+                <p className="text-sm text-muted-foreground">Cari dan pilih siswa untuk melihat raport</p>
+              </div>
+            </div>
+
+            <div className="relative" ref={dropdownRef}>
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input
+                  placeholder="Cari nama siswa..."
+                  value={studentSearch}
+                  onChange={(e) => {
+                    setStudentSearch(e.target.value);
+                    setIsDropdownOpen(true);
+                  }}
+                  onFocus={() => setIsDropdownOpen(true)}
+                  className="pl-10 pr-10"
+                />
+                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              </div>
+
+              {isDropdownOpen && (
+                <div className="absolute top-full left-0 right-0 mt-1 bg-popover border border-border rounded-lg shadow-lg z-50 max-h-64 overflow-y-auto">
+                  {isLoadingStudents ? (
+                    <div className="p-4 text-center text-muted-foreground">
+                      <div className="animate-spin h-5 w-5 border-2 border-primary border-t-transparent rounded-full mx-auto mb-2" />
+                      Memuat daftar siswa...
+                    </div>
+                  ) : filteredStudents.length === 0 ? (
+                    <div className="p-4 text-center text-muted-foreground text-sm">
+                      Tidak ada siswa ditemukan
+                    </div>
+                  ) : (
+                    filteredStudents.map((s, i) => (
+                      <button
+                        key={s.nis || i}
+                        onClick={() => handleSelectStudent(s)}
+                        className="w-full text-left px-4 py-3 hover:bg-accent/50 transition-colors border-b border-border last:border-b-0 flex items-center justify-between"
+                      >
+                        <div>
+                          <p className="font-medium text-foreground text-sm">{s.nama}</p>
+                          <p className="text-xs text-muted-foreground">{s.kelas} • {s.nis}</p>
+                        </div>
+                      </button>
+                    ))
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>;
+  }
+
   if (isLoading || !student) {
     return <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
@@ -132,11 +278,18 @@ export default function Dashboard() {
             <img src={logo} alt="Logo" className="w-10 h-10 rounded-lg object-contain" />
             <div>
               <h1 className="text-lg font-bold text-foreground">Bubat Hebat</h1>
-              <p className="text-xs text-muted-foreground hidden sm:block">Neu-Raport Digital</p>
+              <p className="text-xs text-muted-foreground hidden sm:block">{isAdmin ? 'Mode Admin' : 'Neu-Raport Digital'}</p>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
+            {isAdmin && (
+              <Button variant="outline" size="sm" onClick={() => { setStudent(null); setSelectedStudentPhone(''); }}>
+                <Users className="w-4 h-4 mr-1" />
+                <span className="hidden sm:inline">Pilih Siswa Lain</span>
+                <span className="sm:hidden">Ganti</span>
+              </Button>
+            )}
             <Button variant="ghost" size="icon" onClick={handleRefresh} title="Refresh data">
               <RefreshCw className="w-4 h-4" />
             </Button>

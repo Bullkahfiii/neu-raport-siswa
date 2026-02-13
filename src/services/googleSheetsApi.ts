@@ -25,6 +25,28 @@ export const isAppsScriptConfigured = (): boolean => {
   return true;
 };
 
+// Admin phone number
+const ADMIN_PHONE = '000339';
+
+export const isAdminPhone = (phone: string): boolean => {
+  return phone === ADMIN_PHONE;
+};
+
+// Get all students list (for admin)
+export const getAllStudents = async (): Promise<ApiResponse<Student[]>> => {
+  try {
+    const response = await fetch(`${APPS_SCRIPT_URL}?action=getAllStudents`, {
+      method: 'GET',
+      redirect: 'follow',
+    });
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error('GetAllStudents error:', error);
+    return { success: false, error: 'Gagal mengambil daftar siswa.' };
+  }
+};
+
 // Login by phone number
 export const loginByPhone = async (phone: string): Promise<ApiResponse<Student>> => {
   try {
