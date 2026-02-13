@@ -42,6 +42,9 @@ function doGet(e) {
       case "getAllData":
         result = getAllStudentData(e.parameter.phone);
         break;
+      case "getAllStudents":
+        result = getAllStudents();
+        break;
       default:
         result = { success: false, error: "Action tidak valid" };
     }
@@ -256,6 +259,53 @@ function getAllStudentData(phone) {
       attendance: attendanceResult.data
     }
   };
+}
+
+// ============================================
+// FUNGSI GET ALL STUDENTS (Admin)
+// ============================================
+function getAllStudents() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName(CONFIG.SHEET_DATABASE_SISWA);
+  
+  if (!sheet) {
+    return { success: false, error: "Sheet Database Siswa tidak ditemukan" };
+  }
+
+  const data = sheet.getDataRange().getValues();
+  const students = [];
+
+  const colIndex = {
+    no: 0, nama: 1, nis: 2, asalSekolah: 3, kelas: 4,
+    kurikulum: 5, nomorWA: 6, nomorWAOrangTua: 7, email: 8,
+    tanggalLahir: 9, rumpun: 10, program: 11, foto: 15,
+    pilihanPTNPertama: 26, pilihanPTNKedua: 27
+  };
+
+  for (let i = 1; i < data.length; i++) {
+    const row = data[i];
+    if (!row[colIndex.nama]) continue; // Skip baris kosong
+    
+    students.push({
+      no: row[colIndex.no],
+      nama: row[colIndex.nama],
+      nis: String(row[colIndex.nis]),
+      asalSekolah: row[colIndex.asalSekolah],
+      foto: row[colIndex.foto] || "",
+      kelas: row[colIndex.kelas],
+      kurikulum: row[colIndex.kurikulum],
+      nomorWA: String(row[colIndex.nomorWA]),
+      nomorWAOrangTua: row[colIndex.nomorWAOrangTua],
+      email: row[colIndex.email],
+      tanggalLahir: formatDate(row[colIndex.tanggalLahir]),
+      rumpun: row[colIndex.rumpun],
+      program: row[colIndex.program],
+      pilihanPTNPertama: row[colIndex.pilihanPTNPertama] || "-",
+      pilihanPTNKedua: row[colIndex.pilihanPTNKedua] || "-"
+    });
+  }
+
+  return { success: true, data: students };
 }
 
 // ============================================
