@@ -120,11 +120,15 @@ export default function Dashboard() {
     loadData();
   }, [navigate]);
 
+  const [isSelectingStudent, setIsSelectingStudent] = useState(false);
+
   const handleSelectStudent = async (s: Student) => {
+    setIsSelectingStudent(true);
     setSelectedStudentPhone(s.nomorWA);
     setIsDropdownOpen(false);
     setStudentSearch('');
     await loadStudentData(s.nomorWA);
+    setIsSelectingStudent(false);
   };
   const handleRefresh = async () => {
     setIsLoading(true);
@@ -212,50 +216,57 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <div className="relative" ref={dropdownRef}>
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
-                  placeholder="Cari nama siswa..."
-                  value={studentSearch}
-                  onChange={(e) => {
-                    setStudentSearch(e.target.value);
-                    setIsDropdownOpen(true);
-                  }}
-                  onFocus={() => setIsDropdownOpen(true)}
-                  className="pl-10 pr-10"
-                />
-                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            {isSelectingStudent ? (
+              <div className="flex flex-col items-center justify-center py-8 gap-3">
+                <div className="animate-spin h-8 w-8 border-3 border-primary border-t-transparent rounded-full" />
+                <p className="text-sm text-muted-foreground">Memuat data siswa...</p>
               </div>
-
-              {isDropdownOpen && (
-                <div className="absolute top-full left-0 right-0 mt-1 bg-popover border border-border rounded-lg shadow-lg z-50 max-h-64 overflow-y-auto">
-                  {isLoadingStudents ? (
-                    <div className="p-4 text-center text-muted-foreground">
-                      <div className="animate-spin h-5 w-5 border-2 border-primary border-t-transparent rounded-full mx-auto mb-2" />
-                      Memuat daftar siswa...
-                    </div>
-                  ) : filteredStudents.length === 0 ? (
-                    <div className="p-4 text-center text-muted-foreground text-sm">
-                      Tidak ada siswa ditemukan
-                    </div>
-                  ) : (
-                    filteredStudents.map((s, i) => (
-                      <button
-                        key={s.nis || i}
-                        onClick={() => handleSelectStudent(s)}
-                        className="w-full text-left px-4 py-3 hover:bg-accent/50 transition-colors border-b border-border last:border-b-0 flex items-center justify-between"
-                      >
-                        <div>
-                          <p className="font-medium text-foreground text-sm">{s.nama}</p>
-                          <p className="text-xs text-muted-foreground">{s.kelas} • {s.nis}</p>
-                        </div>
-                      </button>
-                    ))
-                  )}
+            ) : (
+              <div className="relative" ref={dropdownRef}>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Cari nama siswa..."
+                    value={studentSearch}
+                    onChange={(e) => {
+                      setStudentSearch(e.target.value);
+                      setIsDropdownOpen(true);
+                    }}
+                    onFocus={() => setIsDropdownOpen(true)}
+                    className="pl-10 pr-10"
+                  />
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 </div>
-              )}
-            </div>
+
+                {isDropdownOpen && (
+                  <div className="absolute top-full left-0 right-0 mt-1 bg-popover border border-border rounded-lg shadow-lg z-50 max-h-64 overflow-y-auto">
+                    {isLoadingStudents ? (
+                      <div className="p-4 text-center text-muted-foreground">
+                        <div className="animate-spin h-5 w-5 border-2 border-primary border-t-transparent rounded-full mx-auto mb-2" />
+                        Memuat daftar siswa...
+                      </div>
+                    ) : filteredStudents.length === 0 ? (
+                      <div className="p-4 text-center text-muted-foreground text-sm">
+                        Tidak ada siswa ditemukan
+                      </div>
+                    ) : (
+                      filteredStudents.map((s, i) => (
+                        <button
+                          key={s.nis || i}
+                          onClick={() => handleSelectStudent(s)}
+                          className="w-full text-left px-4 py-3 hover:bg-accent/50 transition-colors border-b border-border last:border-b-0 flex items-center justify-between"
+                        >
+                          <div>
+                            <p className="font-medium text-foreground text-sm">{s.nama}</p>
+                            <p className="text-xs text-muted-foreground">{s.kelas} • {s.nis}</p>
+                          </div>
+                        </button>
+                      ))
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </main>
