@@ -71,7 +71,12 @@ export default function Login() {
                   <div className="flex items-center px-4 bg-card border-2 border-input rounded-lg text-muted-foreground font-medium min-w-fit">
                     +62
                   </div>
-                  <Input id="phone" type="tel" placeholder="8xx xxxx xxxx" value={phone} onChange={e => setPhone(e.target.value.replace(/\D/g, ''))} className="flex-1" required />
+                  <Input id="phone" type="tel" placeholder="8xx xxxx xxxx" value={phone} onChange={e => {
+                    const value = e.target.value.replace(/\D/g, '');
+                    if (value === '' || value[0] !== '0') {
+                      setPhone(value);
+                    }
+                  }} className="flex-1" required />
                 </div>
                 <p className="text-xs text-muted-foreground">
                   Masukkan nomor dimulai dari angka 8
