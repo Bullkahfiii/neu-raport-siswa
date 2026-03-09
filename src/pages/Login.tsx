@@ -14,7 +14,7 @@ export default function Login() {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const phoneWithPrefix = `62${phone}`;
+      const phoneWithPrefix = phone;
       if (isAdminPhone(phoneWithPrefix)) {
         localStorage.setItem('isAdmin', 'true');
         localStorage.setItem('loggedInPhone', phoneWithPrefix);
