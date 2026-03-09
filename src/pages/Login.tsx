@@ -43,12 +43,9 @@ export default function Login() {
       {/* Header */}
       <header className="py-6 px-4">
         <div className="container mx-auto flex items-center justify-center">
-          <div className="flex items-center gap-3">
-            <img src={logo} alt="Logo" className="w-12 h-12 rounded-xl object-contain" />
-            <div>
-              <h1 className="text-xl font-bold text-foreground">Bubat Hebat</h1>
-              <p className="text-sm text-muted-foreground">Neu-Raport Digital</p>
-            </div>
+          <div className="text-center">
+            <h1 className="text-xl font-bold text-foreground">Bubat Hebat</h1>
+            <p className="text-sm text-muted-foreground">Neu-Raport Digital</p>
           </div>
         </div>
       </header>
