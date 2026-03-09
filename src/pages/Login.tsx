@@ -14,17 +14,18 @@ export default function Login() {
     e.preventDefault();
     setIsLoading(true);
     try {
-      if (isAdminPhone(phone)) {
+      const phoneWithPrefix = `62${phone}`;
+      if (isAdminPhone(phoneWithPrefix)) {
         localStorage.setItem('isAdmin', 'true');
-        localStorage.setItem('loggedInPhone', phone);
+        localStorage.setItem('loggedInPhone', phoneWithPrefix);
         localStorage.removeItem('loggedInStudent');
         toast.success('Selamat datang, Admin!');
         navigate('/dashboard');
       } else {
-        const result = await loginByPhone(phone);
+        const result = await loginByPhone(phoneWithPrefix);
         if (result.success && result.data) {
           localStorage.setItem('loggedInStudent', JSON.stringify(result.data));
-          localStorage.setItem('loggedInPhone', phone);
+          localStorage.setItem('loggedInPhone', phoneWithPrefix);
           localStorage.removeItem('isAdmin');
           toast.success(`Selamat datang, ${result.data.nama}!`);
           navigate('/dashboard');
