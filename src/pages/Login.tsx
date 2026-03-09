@@ -14,17 +14,18 @@ export default function Login() {
     e.preventDefault();
     setIsLoading(true);
     try {
-      if (isAdminPhone(phone)) {
+      const phoneWithPrefix = `62${phone}`;
+      if (isAdminPhone(phoneWithPrefix)) {
         localStorage.setItem('isAdmin', 'true');
-        localStorage.setItem('loggedInPhone', phone);
+        localStorage.setItem('loggedInPhone', phoneWithPrefix);
         localStorage.removeItem('loggedInStudent');
         toast.success('Selamat datang, Admin!');
         navigate('/dashboard');
       } else {
-        const result = await loginByPhone(phone);
+        const result = await loginByPhone(phoneWithPrefix);
         if (result.success && result.data) {
           localStorage.setItem('loggedInStudent', JSON.stringify(result.data));
-          localStorage.setItem('loggedInPhone', phone);
+          localStorage.setItem('loggedInPhone', phoneWithPrefix);
           localStorage.removeItem('isAdmin');
           toast.success(`Selamat datang, ${result.data.nama}!`);
           navigate('/dashboard');
@@ -69,12 +70,14 @@ export default function Login() {
                 <label htmlFor="phone" className="text-sm font-medium text-foreground">
                   Nomor WhatsApp
                 </label>
-                <div className="relative">
-                  <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                  <Input id="phone" type="tel" placeholder="Contoh: 81234567890" value={phone} onChange={e => setPhone(e.target.value)} className="pl-12" required />
+                <div className="flex gap-2">
+                  <div className="flex items-center px-4 bg-card border-2 border-input rounded-lg text-muted-foreground font-medium min-w-fit">
+                    +62
+                  </div>
+                  <Input id="phone" type="tel" placeholder="8xx xxxx xxxx" value={phone} onChange={e => setPhone(e.target.value.replace(/\D/g, ''))} className="flex-1" required />
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Masukkan nomor tanpa angka 0 diawal
+                  Masukkan nomor dimulai dari angka 8
                 </p>
               </div>
 
