@@ -60,6 +60,9 @@ export function AttendanceSummary({ attendance }: AttendanceSummaryProps) {
         case 'Izin':
           monthlyData[key].izin++;
           break;
+        case 'Tambahan':
+          monthlyData[key].tambahan++;
+          break;
         case 'Terlambat':
           monthlyData[key].terlambat++;
           break;
