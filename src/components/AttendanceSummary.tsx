@@ -172,17 +172,11 @@ export function AttendanceSummary({ attendance }: AttendanceSummaryProps) {
                       </div>
 
                       {/* Statistik */}
-                      <div className="grid grid-cols-4 gap-2 mt-3 text-center">
+                      <div className="grid grid-cols-5 gap-2 mt-3 text-center">
                         {/* Hadir */}
                         <div>
                           <div 
-                            className="w-8 h-8 mx-auto rounded-full bg-success/10 text-success font-bold text-sm"
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              lineHeight: '1'
-                            }}
+                            className="w-8 h-8 mx-auto rounded-full bg-success/10 text-success font-bold text-sm flex items-center justify-center leading-none"
                           >
                             {month.hadir}
                           </div>
@@ -194,13 +188,7 @@ export function AttendanceSummary({ attendance }: AttendanceSummaryProps) {
                         {/* Sakit */}
                         <div>
                           <div 
-                            className="w-8 h-8 mx-auto rounded-full bg-warning/10 text-warning font-bold text-sm"
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              lineHeight: '1'
-                            }}
+                            className="w-8 h-8 mx-auto rounded-full bg-warning/10 text-warning font-bold text-sm flex items-center justify-center leading-none"
                           >
                             {month.sakit}
                           </div>
@@ -212,13 +200,7 @@ export function AttendanceSummary({ attendance }: AttendanceSummaryProps) {
                         {/* Izin */}
                         <div>
                           <div 
-                            className="w-8 h-8 mx-auto rounded-full bg-info/10 text-info font-bold text-sm"
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              lineHeight: '1'
-                            }}
+                            className="w-8 h-8 mx-auto rounded-full bg-info/10 text-info font-bold text-sm flex items-center justify-center leading-none"
                           >
                             {month.izin}
                           </div>
@@ -227,16 +209,22 @@ export function AttendanceSummary({ attendance }: AttendanceSummaryProps) {
                           </div>
                         </div>
 
+                        {/* Tambahan */}
+                        <div>
+                          <div 
+                            className="w-8 h-8 mx-auto rounded-full bg-purple-500/10 text-purple-500 font-bold text-sm flex items-center justify-center leading-none"
+                          >
+                            {month.tambahan}
+                          </div>
+                          <div className="text-xs mt-0.5 text-muted-foreground">
+                            Tambahan
+                          </div>
+                        </div>
+
                         {/* Terlambat */}
                         <div>
                           <div 
-                            className="w-8 h-8 mx-auto rounded-full bg-destructive/10 text-destructive font-bold text-sm"
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              lineHeight: '1'
-                            }}
+                            className="w-8 h-8 mx-auto rounded-full bg-destructive/10 text-destructive font-bold text-sm flex items-center justify-center leading-none"
                           >
                             {month.terlambat}
                           </div>
