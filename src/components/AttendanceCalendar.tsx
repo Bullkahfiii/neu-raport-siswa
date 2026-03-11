@@ -35,6 +35,8 @@ export function AttendanceCalendar({
         return 'bg-warning text-warning-foreground';
       case 'Izin':
         return 'bg-info text-info-foreground';
+      case 'Tambahan':
+        return 'bg-purple-500 text-white';
       case 'Terlambat':
         return 'bg-destructive text-destructive-foreground';
       default:
