@@ -91,6 +91,10 @@ export function AttendanceCalendar({
               <span>Izin</span>
             </div>
             <div className="flex items-center gap-1.5">
+              <div className="w-4 h-4 rounded bg-purple-500" />
+              <span>Tambahan</span>
+            </div>
+            <div className="flex items-center gap-1.5">
               <div className="w-4 h-4 rounded bg-destructive" />
               <span>Terlambat</span>
             </div>
