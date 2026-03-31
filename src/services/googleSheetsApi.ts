@@ -26,7 +26,7 @@ export const isAppsScriptConfigured = (): boolean => {
 };
 
 // Admin phone number
-const ADMIN_PHONE = '000339';
+const ADMIN_PHONE = '339000';
 
 export const isAdminPhone = (phone: string): boolean => {
   return phone === ADMIN_PHONE;
